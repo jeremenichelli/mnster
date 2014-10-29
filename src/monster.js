@@ -15,7 +15,7 @@
     var prefix = /^(mns-)/,
         prefixAttr = /^(mns-attr-)/,
         prefixEach = /^(mns-each-)/,
-        suffix = /(-)([a-zA-Z])*/;
+        suffix = /((-)[a-zA-Z0-9]+)/;
 
     // constructor
     var View = function (options) {

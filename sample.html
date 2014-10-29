@@ -3,26 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+    <style>
+        button {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div id="template">
         <h1 mns-text="user.name"></h1>
         <h2 mns-text="user.job"></h2>
         <a mns-attr-href="user.blog"  mns-text="user.blog"></a>
-        <h3>Jobs</h3>
+        <h3 mns-show="user.jobs">Jobs</h3>
         <ul mns-each-jobs="job">
             <li>
                 <h4 mns-text="job.where"></h4>
                 <h5 mns-text="job.as"></h5>
             </li>
         </ul>
+        <button mns-hide="user.withjob" mns-class="user.color">Hire me!</button>
     </div>
     <script>
         var user = {
                 name: 'Jeremias Menichelli',
                 job: 'Web Developer',
                 blog: 'https://jeremenichelli.github.io/blog',
-                jobs: [ { where: 'Globant', as: 'Web UI Developer'}, { where: 'Velocity Partners', as: 'SSr Developer'} ]
+                jobs: [ { where: 'Globant', as: 'Web UI Developer'}, { where: 'Velocity Partners', as: 'SSr Developer'} ],
+                withjob: false,
+                color: 'red'
             },
             t = document.getElementById('template');
     </script>

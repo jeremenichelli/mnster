@@ -92,7 +92,7 @@
             bufferNode = node.__monsterTemplate__.cloneNode(true);
             node.innerHTML = '';
 
-            for (var i = 0, len = data.length; i < len; i++) {
+            for (var i in data) {
                 tempNode = bufferNode.cloneNode(true);
 
                 // set temporary data

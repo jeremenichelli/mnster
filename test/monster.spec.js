@@ -85,7 +85,7 @@ describe('monster', function () {
             // each binding for arrays
             ul1 = document.createElement('ul')
             ul1.setAttribute('mns-each-songs', 'song');
-            ul1.innerHTML = '<li><span mns-text="song.title"><span></li>';
+            ul1.innerHTML = '<li mns-text="song.title"></li>';
             tmp.appendChild(ul1);
 
             // each binding for obj
@@ -144,9 +144,9 @@ describe('monster', function () {
         });
         it('each binding on arrays', function () {
             expect(ul1.children.length).toBe(3);
-            expect(ul1.children[0].querySelector('span').innerHTML).toBe(data.songs[0].title);
-            expect(ul1.children[1].querySelector('span').innerHTML).toBe(data.songs[1].title);
-            expect(ul1.children[2].querySelector('span').innerHTML).toBe(data.songs[2].title);
+            expect(ul1.children[0].innerHTML).toBe(data.songs[0].title);
+            expect(ul1.children[1].innerHTML).toBe(data.songs[1].title);
+            expect(ul1.children[2].innerHTML).toBe(data.songs[2].title);
         });
         it('each binding for objects', function () {
             expect(ul2.children.length).toBe(2);

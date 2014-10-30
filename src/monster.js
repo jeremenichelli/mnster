@@ -133,6 +133,8 @@
 
         v.nodes = v.template.querySelectorAll('*');
 
+        v.bindNode(v.template);
+
         for (var i = 0, len = v.nodes.length; i < len; i++) {
             v.bindNode(v.nodes[i]);
         }

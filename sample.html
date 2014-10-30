@@ -21,15 +21,15 @@
                 <h5 mns-text="job.as"></h5>
             </li>
         </ul>
-        <button mns-hide="user.withjob" mns-class="user.color">Hire me!</button>
+        <button mns-show="user.free" mns-class="user.color">Hire me!</button>
     </div>
     <script>
         var user = {
                 name: 'Jeremias Menichelli',
                 job: 'Web Developer',
-                blog: 'https://jeremenichelli.github.io/blog',
+                // blog: 'https://jeremenichelli.github.io/blog',
                 jobs: [ { where: 'Globant', as: 'Web UI Developer'}, { where: 'Velocity Partners', as: 'SSr Developer'} ],
-                withjob: false,
+                free: true,
                 color: 'red'
             },
             t = document.getElementById('template');

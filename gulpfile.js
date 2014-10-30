@@ -1,5 +1,6 @@
 // modules
 var gulp = require('gulp'),
+    gutil = require('gulp-util'),
     uglify = require('gulp-uglify'),
     rename = require('gulp-rename'),
     concat = require('gulp-concat-util'),
@@ -27,12 +28,16 @@ gulp.task('hint', function () {
 });
 
 gulp.task('test', ['hint'], function () {
+    gutil.log(gutil.colors.bgGreen('JSHint passed'));
+
     return gulp.src([paths.spec, paths.src])
         .pipe(karma({configFile: 'test/karma.conf.js'}))
 });
 
 
 gulp.task('minify', ['test'], function () {
+    gutil.log(gutil.colors.bgGreen('All test passed'));
+
     return gulp.src(paths.src)
         .pipe(concat.header(header))
         .pipe(gulp.dest(paths.output))
@@ -41,4 +46,6 @@ gulp.task('minify', ['test'], function () {
             suffix: '.min'
         }))
         .pipe(gulp.dest(paths.output));
-})
+});
+
+gulp.task('default', [ 'minify' ]);

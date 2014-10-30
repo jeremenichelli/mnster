@@ -79,7 +79,7 @@
             var attribute = attr.name.replace(prefixAttr, ''),
                 value = _toProperty(model, attr.value);
 
-            node.setAttribute(attribute, (value) ? value+ ''  : '');
+            node.setAttribute(attribute, (value) ? value + ''  : '');
         },
         each: function (node, attr, model, context) {
             var data = _toProperty(model, context + '.' + attr.name.replace(prefixEach, '')),
@@ -152,6 +152,7 @@
 
             if (prefix.test(name)) {
                 type = name.replace(prefix, '').replace(suffix, '');
+                // applied only if binding type supported
                 if (type in _bindings) {
                     _bindings[type](node, attr, v.model, v.context);
                 }

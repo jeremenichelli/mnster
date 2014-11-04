@@ -15,7 +15,8 @@
 })(this, function () {
     'use strict';
 
-    var prefix = /^(mns-)/,
+    var _bindings = {},
+        prefix = /^(mns-)/,
         prefixAttr = /^(mns-attr-)/,
         prefixEach = /^(mns-each-)/,
         suffix = /((-)[a-zA-Z0-9]+)/;
@@ -59,10 +60,10 @@
             prop = obj;
 
         for (var i = 0, len = props.length; i < len; i++) {
-            if (typeof prop[props[i]] !== 'undefined') {
+            if (typeof prop[props[i]] !== 'undefined' && prop[props[i]] !== null) {
                 prop = prop[props[i]];
             } else {
-                prop = false;
+                prop = '';
             }
         }
 
@@ -70,64 +71,67 @@
     };
 
     // available bindings
-    var _bindings = {
-        text: function (node, attr, model) {
-            var data = _toProperty(model, attr.value);
-            node.innerHTML = (data) ? data + '' : '';
-        },
-        attr: function (node, attr, model) {
-            var attribute = attr.name.replace(prefixAttr, ''),
-                value = _toProperty(model, attr.value);
+    _bindings.text = function (node, attr, model) {
+        var data = _toProperty(model, attr.value);
+        node.innerHTML = data + '';
+    };
+    _bindings.attr = function (node, attr, model) {
+        var attribute = attr.name.replace(prefixAttr, ''),
+            value = _toProperty(model, attr.value);
 
-            node.setAttribute(attribute, (value) ? value + ''  : '');
-        },
-        each: function (node, attr, model, context) {
-            var data = _toProperty(model, context + '.' + attr.name.replace(prefixEach, '')),
-                tempContext = attr.value,
-                tempData,
-                tempView,
-                tempNode,
-                bufferNode;
+        node.setAttribute(attribute, value + '');
+    };
 
-            if (!node.__monsterTemplate__) {
-                node.__monsterTemplate__ = node.children[0].cloneNode(true);
-            }
-            bufferNode = node.__monsterTemplate__.cloneNode(true);
-            node.innerHTML = '';
+    _bindings.each = function (node, attr, model, context) {
+        var eachContext = attr.name.replace(prefixEach, ''),
+            data = _toProperty(model, (context === eachContext) ? context : context + '.' + eachContext),
+            tempContext = attr.value,
+            tempData,
+            tempView,
+            tempNode,
+            bufferNode;
 
-            for (var i in data) {
-                tempNode = bufferNode.cloneNode(true);
+        if (!node.__monsterTemplate__) {
+            node.__monsterTemplate__ = node.children[0].cloneNode(true);
+        }
+        bufferNode = node.__monsterTemplate__.cloneNode(true);
+        node.innerHTML = '';
 
-                // set temporary data
-                tempData = data[i] || {};
+        for (var i in data) {
+            tempNode = bufferNode.cloneNode(true);
 
-                // set temporary view
-                tempView = new View({
-                    template: tempNode,
-                    context: tempContext,
-                    model: tempData
-                });
+            // set temporary data
+            tempData = data[i] || {};
 
-                node.appendChild(tempNode);
-            }
+            // set temporary view
+            tempView = new View({
+                template: tempNode,
+                context: tempContext,
+                model: tempData
+            });
 
-            tempData = tempNode = tempView = bufferNode = null;
-        },
-        show: function (node, attr, model) {
-            var dataShow = _toProperty(model, attr.value);
+            node.appendChild(tempNode);
+        }
 
-            node.style.display = (!!dataShow) ? 'block' : 'none'; 
-        },
-        hide: function (node, attr, model) {
-            var dataHide = _toProperty(model, attr.value);
+        tempData = tempNode = tempView = bufferNode = null;
+    };
 
-            node.style.display = (!!dataHide) ? 'none' : 'block'; 
-        },
-        'class': function (node, attr, model) {
-            if (attr.value) {
-                var cl = _toProperty(model, attr.value);
-                _addClass(node, cl + '');
-            }
+    _bindings.show = function (node, attr, model) {
+        var dataShow = _toProperty(model, attr.value);
+
+        node.style.display = (!!dataShow) ? 'block' : 'none'; 
+    };
+
+    _bindings.hide = function (node, attr, model) {
+        var dataHide = _toProperty(model, attr.value);
+
+        node.style.display = (!!dataHide) ? 'none' : 'block'; 
+    };
+
+    _bindings['class'] = function (node, attr, model) {
+        if (attr.value) {
+            var cl = _toProperty(model, attr.value);
+            _addClass(node, cl + '');
         }
     };
 

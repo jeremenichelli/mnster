@@ -3,11 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
-    <style>
-        button {
-            display: none;
-        }
-    </style>
 </head>
 <body>
     <div id="template">
@@ -15,14 +10,16 @@
         <h2 mns-text="user.job"></h2>
         <a mns-attr-href="user.blog"  mns-text="user.blog"></a>
         <h3 mns-show="user.jobs">Jobs</h3>
-        <ul mns-each-jobs="job">
+        <ul mns-each-job="user.jobs">
             <li>
                 <h4 mns-text="job.where"></h4>
                 <h5 mns-text="job.as"></h5>
             </li>
         </ul>
         <button mns-show="user.free" mns-class="user.color">Hire me!</button>
+        <button mns-onclick="salute" mns-attr-data-name="user.name">Say hello!</button>
     </div>
+    <script src="src/monster.js"></script>
     <script>
         var user = {
                 name: 'Jeremias Menichelli',
@@ -32,8 +29,15 @@
                 free: true,
                 color: 'red'
             },
-            t = document.getElementById('template');
+            t = document.getElementById('template'),
+            c = {};
+            c.salute = function (e) {
+                    console.log(e);
+                    console.info('Hello! I\'m ' + e.target.getAttribute('data-name'));
+                }
+            ;
+
+            monster.view(t, {context: 'user', model: user, controller: c});
     </script>
-    <script src="src/monster.js"></script>
 </body>
 </html>

@@ -118,13 +118,13 @@ describe('monster', function () {
 
             // each binding for arrays
             ul1 = document.createElement('ul')
-            ul1.setAttribute('mns-each-songs', 'song');
+            ul1.setAttribute('mns-each-song', 'person.songs');
             ul1.innerHTML = '<li mns-text="song.title"></li>';
             tmp.appendChild(ul1);
 
             // each binding for obj
             ul2 = document.createElement('ul')
-            ul2.setAttribute('mns-each-albums', 'album');
+            ul2.setAttribute('mns-each-album', 'person.albums');
             ul2.innerHTML = '<li><span mns-text="album.title"></span></li>';
             tmp.appendChild(ul2);
 
@@ -146,7 +146,7 @@ describe('monster', function () {
             tmp.appendChild(span2);
 
             ul3 = document.createElement('ul');
-            ul3.setAttribute('mns-each-bandmates', 'mate');
+            ul3.setAttribute('mns-each-mate', 'bandmates');
             ul3.innerHTML = '<li>' +
                 '<span mns-text="mate.name"></span>' +
                 '<span mns-text="mate.plays"></span>' +

@@ -135,6 +135,17 @@
         }
     };
 
+    // _bindings.on = function (node, attr, model, controller) {
+    //     var c = (controller) ? controller : root,
+    //         ev = attr.value.replace(prefix, ''),
+    //         method = _toProperty(model, attr.value);
+
+    //     if (typeof method === 'function') {
+    //         node[ev] = method.bind(node, e, model);
+    //     }        
+    // };
+
+    // view prototype methods
     View.prototype.bindModel = function () {
         var v = this;
 
@@ -154,14 +165,11 @@
         for (var i = 0, len = attrs.length; i < len; i++) {
             var attr = attrs[i],
                 name = attr.name, 
-                type;
-
-            if (prefix.test(name)) {
                 type = name.replace(prefix, '').replace(suffix, '');
-                // applied only if binding type supported
-                if (type in _bindings) {
-                    _bindings[type](node, attr, v.model, v.context);
-                }
+
+            // applied only if binding type supported
+            if (prefix.test(name) && type in _bindings) {
+               _bindings[type](node, attr, v.model, v.context);
             }
         }
     };

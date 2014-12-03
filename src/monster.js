@@ -9,14 +9,15 @@
     } else {
         root.monster = factory(root);
     }
-})(this, function () {
+})(this, function (root) {
     'use strict';
 
     var _bindings = {},
         prefix = /^(mns-)/,
         prefixAttr = /^(mns-attr-)/,
         prefixEach = /^(mns-each-)/,
-        suffix = /((-)[a-zA-Z0-9]+)/;
+        prefixOn = /^(mns-on)/,
+        suffix = /((-)[a-zA-Z0-9]+)+/;
 
     // constructor
     var View = function (options) {
@@ -33,9 +34,9 @@
             console.error('Please specify a model and a context');
             return;
         } else {
-            v.context = options.context;
             v.model = {};
             v.model[options.context] = options.model;
+            v.controller = options.controller || root;
         }
 
         v.bindModel();
@@ -79,10 +80,9 @@
         node.setAttribute(attribute, value + '');
     };
 
-    _bindings.each = function (node, attr, model, context) {
-        var eachContext = attr.name.replace(prefixEach, ''),
-            data = _toProperty(model, (context === eachContext) ? context : context + '.' + eachContext),
-            tempContext = attr.value,
+    _bindings.each = function (node, attr, model) {
+        var data = _toProperty(model, attr.value),
+            tempContext = attr.name.replace(prefixEach, ''),
             tempData,
             tempView,
             tempNode,
@@ -132,6 +132,16 @@
         }
     };
 
+    _bindings.on = function (node, attr, model, controller) {
+        var ev = attr.name.replace(prefix, ''),
+            method = controller[attr.value];
+
+        if (typeof method === 'function') {
+            node[ev] = method.bind(node);
+        }        
+    };
+
+    // view prototype methods
     View.prototype.bindModel = function () {
         var v = this;
 
@@ -151,14 +161,13 @@
         for (var i = 0, len = attrs.length; i < len; i++) {
             var attr = attrs[i],
                 name = attr.name, 
-                type;
-
-            if (prefix.test(name)) {
                 type = name.replace(prefix, '').replace(suffix, '');
-                // applied only if binding type supported
-                if (type in _bindings) {
-                    _bindings[type](node, attr, v.model, v.context);
-                }
+
+            // applied only if attr starts with mns and binding type is supported
+            if (prefix.test(name) && type in _bindings) {
+               _bindings[type](node, attr, v.model);
+            } else if (prefixOn.test(name)) {
+                _bindings.on(node, attr, v.model, v.controller);
             }
         }
     };
@@ -176,7 +185,8 @@
         var v = new View({
             template: template,
             context: opt.context,
-            model: opt.model
+            model: opt.model,
+            controller: opt.controller
         });
 
         return v;

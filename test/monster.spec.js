@@ -13,7 +13,7 @@ describe('monster', function () {
 
     describe('Binding', function () {
         var tmp, tmpTwo, view, viewTwo, h1, h2, p1, p2, p3,
-            a1, a2, ul1, ul2, ul3, span1, span2, span3,
+            p4, a1, a2, ul1, ul2, ul3, span1, span2, span3,
             data = {
                 name: {
                     first: 'Eddie',
@@ -98,6 +98,14 @@ describe('monster', function () {
             p3 = document.createElement('p');
             p3.setAttribute('mns-text', 'person.albumsThisYear');
             tmp.appendChild(p3);
+
+            // data attribute binding
+            p4 = document.createElement('p');
+            p4.setAttribute('mns-data-status', 'person.status');
+            tmp.appendChild(p4);
+
+            // data binding on template
+            tmp.setAttribute('mns-data-site', 'person.siteName');
 
             // bind null value
             span3 = document.createElement('span');
@@ -204,6 +212,14 @@ describe('monster', function () {
             it('text and attr binding together', function () {
                 expect(a1.innerHTML).toBe(data.siteName);
             });
+        });
+        describe('[mns-data-*]', function () {
+            it('simple data attribute binding', function () {
+                expect(p4.getAttribute('data-status') === 'on_tour').toBe(true);
+            });
+            it('binding on base template object', function () {
+                expect(tmp.getAttribute('data-site') === 'Bio').toBe(true);
+            })
         });
         describe('[mns-each]', function () {
             it('each binding on arrays', function () {

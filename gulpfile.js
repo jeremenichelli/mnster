@@ -36,7 +36,7 @@ gulp.task('test', ['hint'], function () {
 
 
 gulp.task('minify', ['test'], function () {
-    gutil.log(gutil.colors.bgGreen('All test passed'));
+    gutil.log(gutil.colors.bgGreen('All tests passed'));
 
     return gulp.src(paths.src)
         .pipe(concat.header(header))

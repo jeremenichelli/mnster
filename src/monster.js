@@ -80,6 +80,13 @@
         node.setAttribute(attribute, value + '');
     };
 
+    _bindings.data = function (node, attr, model) {
+        var attribute = attr.name.replace(prefix, ''),
+            value = _toProperty(model, attr.value);
+
+        node.setAttribute(attribute, value + '');
+    };
+
     _bindings.each = function (node, attr, model) {
         var data = _toProperty(model, attr.value),
             tempContext = attr.name.replace(prefixEach, ''),

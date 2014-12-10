@@ -21,6 +21,13 @@
     "laxcomma": true,
     "globals": {
         "window": true,
+        "document": true,
+        "expect": true,
+        "describe": true,
+        "monster": true,
+        "it": true,
+        "beforeEach": true,
+        "afterEach": true,
         "console": true,
         "define": true,
         "module": true

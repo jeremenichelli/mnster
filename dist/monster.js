@@ -177,6 +177,7 @@
             if (prefix.test(name) && type in _bindings) {
                _bindings[type](node, attr, v.model);
             } else if (prefixOn.test(name)) {
+                // apply `on` binding
                 _bindings.on(node, attr, v.model, v.controller);
             }
         }

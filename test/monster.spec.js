@@ -114,7 +114,7 @@ describe('monster', function () {
 
             // show binding
             p2 = document.createElement('p');
-            p2.innerHTML = 'He has solo albums!'
+            p2.innerHTML = 'He has solo albums!';
             p2.setAttribute('mns-show', 'person.hasSoloAlbums');
             tmp.appendChild(p2);
 
@@ -125,13 +125,13 @@ describe('monster', function () {
             tmp.appendChild(a1);
 
             // each binding for arrays
-            ul1 = document.createElement('ul')
+            ul1 = document.createElement('ul');
             ul1.setAttribute('mns-each-song', 'person.songs');
             ul1.innerHTML = '<li mns-text="song.title"></li>';
             tmp.appendChild(ul1);
 
             // each binding for obj
-            ul2 = document.createElement('ul')
+            ul2 = document.createElement('ul');
             ul2.setAttribute('mns-each-album', 'person.albums');
             ul2.innerHTML = '<li><span mns-text="album.title"></span></li>';
             tmp.appendChild(ul2);
@@ -219,7 +219,7 @@ describe('monster', function () {
             });
             it('binding on base template object', function () {
                 expect(tmp.getAttribute('data-site') === 'Bio').toBe(true);
-            })
+            });
         });
         describe('[mns-each]', function () {
             it('each binding on arrays', function () {
@@ -244,7 +244,7 @@ describe('monster', function () {
             it('class binding on an element with a class already', function () {
                 expect(span2.className).toBe('tour-icon ' + data.status);
             });
-        })
+        });
     });
     describe('Update', function () {
         var tmp, el, v,
@@ -276,5 +276,5 @@ describe('monster', function () {
         it('update text binding', function () {
             expect(el.innerHTML).toBe('insect');
         });
-    })
+    });
 });

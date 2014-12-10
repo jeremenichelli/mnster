@@ -21,7 +21,7 @@ var paths = {
 }
 
 gulp.task('hint', function () {
-    return gulp.src(paths.src)
+    return gulp.src([ paths.src, paths.spec ])
         .pipe(jshint())
         .pipe(jshint.reporter('jshint-stylish'))
         .pipe(jshint.reporter('fail'));

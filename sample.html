@@ -32,12 +32,8 @@
             t = document.getElementById('template'),
             c = {};
             c.salute = function (e) {
-                    console.log(e);
-                    console.info('Hello! I\'m ' + e.target.getAttribute('data-name'));
-                }
-            ;
-
-            monster.view(t, {context: 'user', model: user, controller: c});
+                console.info('Hello! I\'m ' + e.target.getAttribute('data-name'));
+            };
     </script>
 </body>
 </html>

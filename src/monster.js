@@ -1,9 +1,7 @@
 (function (root, factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
-        define(function() {
-            return factory(root);
-        });
+        define([], factory);
     } else if (typeof exports === 'object') {
         module.exports = factory;
     } else {
@@ -17,42 +15,26 @@
         prefixAttr = /^(mns-attr-)/,
         prefixEach = /^(mns-each-)/,
         prefixOn = /^(mns-on)/,
-        suffix = /((-)[a-zA-Z0-9]+)+/;
+        suffix = /(\-[a-zA-Z0-9]+)+/;
 
-    // constructor
-    var View = function (options) {
-        var v = this;
+    // LEGACY METHODS
 
-        if (!options.template) {
-            console.error('No template specified');
-            return;
-        } else {
-            v.template = options.template;
-        }
-
-        if (!options.model || !options.context) {
-            console.error('Please specify a model and a context');
-            return;
-        } else {
-            v.model = {};
-            v.model[options.context] = options.model;
-            v.controller = options.controller || root;
-        }
-
-        v.bindModel();
+    /**
+     * method to check if node is an HTML Element (private)
+     * @method _isValidNode
+     * @param {node} node
+     * @returns {Boolean}
+     */
+    var _isValidNode = function (node) {
+        return node.nodeType === 1;
     };
 
-
-    // adding a class for mns-class binding
-    var _addClass = function (el, cl) {
-        if ('classList' in el) {
-            el.classList.add(cl);
-        } else {
-            el.className += (el.className === '') ? cl : ' ' + cl; 
-        }
-    };
-
-    // get property from an object and a string
+    /**
+     * receives an object and a string with property names concatenated by dots and gets the resulting data
+     * @method _toProperty
+     * @param {obj} model
+     * @param {str} String
+     */
     var _toProperty = function (obj, str) {
         var props = str.split('.'),
             prop = obj;
@@ -61,14 +43,119 @@
             if (typeof prop[props[i]] !== 'undefined' && prop[props[i]] !== null) {
                 prop = prop[props[i]];
             } else {
-                prop = '';
+                return '';
             }
         }
 
         return prop;
     };
 
-    // available bindings
+    /**
+     * cross-browser method to add a class to an element (private)
+     * @method _addClass
+     * @param {el} node
+     * @param {cl} String
+     */
+    var _addClass = (function () {
+        if ('classList' in document.body) {
+            return function(el, cl) {
+                el.classList.add(cl);
+            };
+        } else {
+            return function(el, cl) {
+                el.className += (el.className === '') ? cl : ' ' + cl; 
+            };
+        }
+    })();
+
+    /**
+     * view constructor
+     * @method View
+     * @param {config} object
+     * @returns {object}
+     */
+    var View = function (config) {
+        var v = this;
+
+        v.template = config.template;
+        v.model = {};
+        v.model[config.context] = config.model;
+        v.controller = config.controller || root;
+
+        v.bindModel();
+    };
+
+    /**
+     * gets child nodes from template and binds each one if it's valid
+     * @method view.bindModel
+     */
+    View.prototype.bindModel = function () {
+        var v = this,
+            nodesCount = 0,
+            tempNode;
+
+        v.nodes = v.template.childNodes;
+
+        // check if template node has bindings
+        v.bindNode(v.template);
+
+        nodesCount = v.nodes.length;
+
+        while (nodesCount) {
+            tempNode = v.nodes[--nodesCount];
+
+            if (_isValidNode(tempNode)) {
+                v.bindNode(tempNode);
+            }
+        }
+
+        tempNode = nodesCount = null;
+    };
+
+    /**
+     * goes through all attributes present in a node and apply bindings
+     * @method view.bindNode
+     * @param {node} node
+     */
+    View.prototype.bindNode = function (node) {
+        var v = this,
+            attrs = node.attributes,
+            attrsCount = attrs.length,
+            // while block variables
+            attr,
+            name,
+            type;
+
+        while (attrsCount) {
+            attr = attrs[--attrsCount];
+            name = attr.name;
+            type = name.replace(prefix, '').replace(suffix, '');
+
+            // applied only if attr starts with `mns` and binding type is supported
+            if (prefix.test(name) && type in _bindings) {
+               _bindings[type](node, attr, v.model);
+            } else if (prefixOn.test(name)) {
+                // apply `on` binding
+                _bindings.on(node, attr, v.model, v.controller);
+            }
+        }
+
+        attrs = attrsCount = attr = name = type = null;
+    };
+
+    /**
+     * goes through all nodes and re-binds everything
+     * @method view.update
+     */
+    View.prototype.update = function () {
+        var v = this;
+
+        for (var i = 0, len = v.nodes.length; i < len; i++) {
+            v.bindNode(v.nodes[i]);
+        }
+    };
+
+    // BINDINGS
     _bindings.text = function (node, attr, model) {
         var data = _toProperty(model, attr.value);
         node.innerHTML = data + '';
@@ -148,47 +235,24 @@
         }        
     };
 
-    // view prototype methods
-    View.prototype.bindModel = function () {
-        var v = this;
-
-        v.nodes = v.template.querySelectorAll('*');
-
-        v.bindNode(v.template);
-
-        for (var i = 0, len = v.nodes.length; i < len; i++) {
-            v.bindNode(v.nodes[i]);
-        }
-    };
-
-    View.prototype.bindNode = function (node) {
-        var v = this,
-            attrs = node.attributes;
-
-        for (var i = 0, len = attrs.length; i < len; i++) {
-            var attr = attrs[i],
-                name = attr.name, 
-                type = name.replace(prefix, '').replace(suffix, '');
-
-            // applied only if attr starts with mns and binding type is supported
-            if (prefix.test(name) && type in _bindings) {
-               _bindings[type](node, attr, v.model);
-            } else if (prefixOn.test(name)) {
-                // apply `on` binding
-                _bindings.on(node, attr, v.model, v.controller);
-            }
-        }
-    };
-
-    View.prototype.update = function () {
-        var v = this;
-
-        for (var i = 0, len = v.nodes.length; i < len; i++) {
-            v.bindNode(v.nodes[i]);
-        }
-    };
-
+    /**
+     * goes through all attributes present in a node and apply bindings
+     * @method _createView
+     * @param {node} node
+     */
     var _createView = function (template, opt) {
+        // return if no template is passed
+        if (!template || !_isValidNode(template)) {
+            console.error('monster.view: You must pass a valid template as a first argument');
+            return;
+        }
+
+        // return if no context and model is passed
+        if(!opt.context || !opt.model) {
+            console.error('monster.view: You must specify a context and a model');
+            return;
+        }
+
         // create and return a new view
         var v = new View({
             template: template,

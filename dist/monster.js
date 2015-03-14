@@ -17,7 +17,6 @@
         prefix = /^(mns-)/,
         prefixAttr = /^(mns-attr-)/,
         prefixEach = /^(mns-each-)/,
-        prefixOn = /^(mns-on)/,
         suffix = /(\-[a-zA-Z0-9]+)+/;
 
     // LEGACY METHODS
@@ -67,6 +66,29 @@
         } else {
             return function(el, cl) {
                 el.className += (el.className === '') ? cl : ' ' + cl; 
+            };
+        }
+    })();
+
+    /**
+     * cross-browser method to bind an event (private)
+     * @method _addEvent
+     * @param {el} node
+     * @param {ev} String
+     * @param {fn} Function
+     */
+    var _addEvent = (function () {
+        if ('addEventListner' in document.body) {
+            return function (el, ev, fn) {
+                el.addEventListener(ev, fn, false);
+            };
+        } else if ('attachEvent' in document.body) {
+            return function (el, ev, fn) {
+                el.attachEvent(ev, fn); 
+            };
+        } else {
+            return function (el, ev, fn) {
+                el['on' + ev] = fn;
             };
         }
     })();
@@ -136,10 +158,7 @@
 
             // applied only if attr starts with `mns` and binding type is supported
             if (prefix.test(name) && type in _bindings) {
-               _bindings[type](node, attr, v.model);
-            } else if (prefixOn.test(name)) {
-                // apply `on` binding
-                _bindings.on(node, attr, v.model, v.controller);
+               _bindings[type](node, attr, v.model, v.controller);
             }
         }
 
@@ -152,6 +171,8 @@
      */
     View.prototype.update = function () {
         var v = this;
+
+        v.bindNode(v.template);
 
         for (var i = 0, len = v.nodes.length; i < len; i++) {
             v.bindNode(v.nodes[i]);
@@ -230,11 +251,11 @@
     };
 
     _bindings.on = function (node, attr, model, controller) {
-        var ev = attr.name.replace(prefix, ''),
+        var ev = attr.name.replace(prefix, '').replace('on-', ''),
             method = controller[attr.value];
 
         if (typeof method === 'function') {
-            node[ev] = method.bind(node);
+            _addEvent(node, ev, method);
         }        
     };
 

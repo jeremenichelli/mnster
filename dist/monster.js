@@ -15,8 +15,6 @@
 
     var _bindings = {},
         prefix = /^(mns-)/,
-        prefixAttr = /^(mns-attr-)/,
-        prefixEach = /^(mns-each-)/,
         suffix = /(\-[a-zA-Z0-9]+)+/;
 
     // LEGACY METHODS
@@ -158,7 +156,18 @@
 
             // applied only if attr starts with `mns` and binding type is supported
             if (prefix.test(name) && type in _bindings) {
-               _bindings[type](node, attr, v.model, v.controller);
+                // wrap binding in a try to not halt rest of the binding process
+                try {
+                    _bindings[type]({
+                        node: node,
+                        attribute: attr.name,
+                        value: attr.value,
+                        valueFromModel: _toProperty(v.model, attr.value),
+                        controller: v.controller
+                    });
+                } catch (err) {
+                    console.error(err);
+                }
             }
         }
 
@@ -170,37 +179,51 @@
      * @method view.update
      */
     View.prototype.update = function () {
-        var v = this;
+        var v = this,
+            nodesCount = 0,
+            tempNode;
 
+        // check if template node has bindings
         v.bindNode(v.template);
 
-        for (var i = 0, len = v.nodes.length; i < len; i++) {
-            v.bindNode(v.nodes[i]);
+        nodesCount = v.nodes.length;
+
+        while (nodesCount) {
+            tempNode = v.nodes[--nodesCount];
+
+            if (_isValidNode(tempNode)) {
+                v.bindNode(tempNode);
+            }
         }
+
+        tempNode = nodesCount = null;
     };
 
     // BINDINGS
-    _bindings.text = function (node, attr, model) {
-        var data = _toProperty(model, attr.value);
-        node.innerHTML = data + '';
-    };
-    _bindings.attr = function (node, attr, model) {
-        var attribute = attr.name.replace(prefixAttr, ''),
-            value = _toProperty(model, attr.value);
+    _bindings.text = function (options) {
+        var node = options.node;
 
-        node.setAttribute(attribute, value + '');
+        node.innerHTML = options.valueFromModel + '';
     };
 
-    _bindings.data = function (node, attr, model) {
-        var attribute = attr.name.replace(prefix, ''),
-            value = _toProperty(model, attr.value);
+    _bindings.attr = function (options) {
+        var node = options.node,
+            attribute = options.attribute.replace('mns-attr-', '');
 
-        node.setAttribute(attribute, value + '');
+        node.setAttribute(attribute, options.valueFromModel + '');
     };
 
-    _bindings.each = function (node, attr, model) {
-        var data = _toProperty(model, attr.value),
-            tempContext = attr.name.replace(prefixEach, ''),
+    _bindings.data = function (options) {
+        var node = options.node,
+            attribute = options.attribute.replace('mns-', '');
+
+        node.setAttribute(attribute, options.valueFromModel + '');
+    };
+
+    _bindings.each = function (options) {
+        var node = options.node,
+            data = options.valueFromModel,
+            tempContext = options.attribute.replace('mns-each-', ''),
             tempData,
             tempView,
             tempNode,
@@ -231,28 +254,30 @@
         tempData = tempNode = tempView = bufferNode = null;
     };
 
-    _bindings.show = function (node, attr, model) {
-        var dataShow = _toProperty(model, attr.value);
+    _bindings.show = function (options) {
+        var node = options.node;
 
-        node.style.display = (!!dataShow) ? 'block' : 'none'; 
+        node.style.display = !!options.valueFromModel ? 'block' : 'none'; 
     };
 
-    _bindings.hide = function (node, attr, model) {
-        var dataHide = _toProperty(model, attr.value);
+    _bindings.hide = function (options) {
+        var node = options.node;
 
-        node.style.display = (!!dataHide) ? 'none' : 'block'; 
+        node.style.display = !!options.valueFromModel ? 'none' : 'block'; 
     };
 
-    _bindings['class'] = function (node, attr, model) {
-        if (attr.value) {
-            var cl = _toProperty(model, attr.value);
-            _addClass(node, cl + '');
+    _bindings['class'] = function (options) {
+        var node = options.node;
+
+        if (options.valueFromModel !== '') {
+            _addClass(node, options.valueFromModel + '');
         }
     };
 
-    _bindings.on = function (node, attr, model, controller) {
-        var ev = attr.name.replace(prefix, '').replace('on-', ''),
-            method = controller[attr.value];
+    _bindings.on = function (options) {
+        var node = options.node,
+            ev = options.attribute.replace('mns-on-', ''),
+            method = options.controller[options.value];
 
         if (typeof method === 'function') {
             _addEvent(node, ev, method);

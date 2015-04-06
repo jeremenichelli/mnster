@@ -16,7 +16,7 @@
     "undef": true,
     "trailing": true,
     "maxparams": 4,
-    "maxlen": 120,
+    "maxlen": 125,
     "eqnull": true,
     "laxcomma": true,
     "globals": {
@@ -30,6 +30,7 @@
         "afterEach": true,
         "console": true,
         "define": true,
-        "module": true
+        "module": true,
+        "spyOn": true
     }
 }

@@ -14,33 +14,24 @@
         prefix = /^(mns-)/,
         suffix = /(\-[a-zA-Z0-9]+)+/;
 
-    // LEGACY METHODS
+    // PRIVATE METHODS
 
     /**
-     * method to check if node is an HTML Element (private)
-     * @method _isValidNode
-     * @param {node} node
-     * @returns {Boolean}
+     * given a list of properties concatenated by dots and an object
+     * returns the resulting data or an empty string
+     * @method _getFromModel
+     * @param {Object} model
+     * @param {String} str
      */
-    var _isValidNode = function (node) {
-        return node.nodeType === 1;
-    };
-
-    /**
-     * receives an object and a string with property names concatenated by dots and gets the resulting data
-     * @method _toProperty
-     * @param {obj} model
-     * @param {str} String
-     */
-    var _toProperty = function (obj, str) {
+    var _getFromModel = function (model, str) {
         var props = str.split('.'),
-            prop = obj;
+            prop = model;
 
         for (var i = 0, len = props.length; i < len; i++) {
             if (typeof prop[props[i]] !== 'undefined' && prop[props[i]] !== null) {
                 prop = prop[props[i]];
             } else {
-                return '';
+                return null;
             }
         }
 
@@ -48,51 +39,10 @@
     };
 
     /**
-     * cross-browser method to add a class to an element (private)
-     * @method _addClass
-     * @param {el} node
-     * @param {cl} String
-     */
-    var _addClass = (function () {
-        if ('classList' in document.body) {
-            return function(el, cl) {
-                el.classList.add(cl);
-            };
-        } else {
-            return function(el, cl) {
-                el.className += (el.className === '') ? cl : ' ' + cl; 
-            };
-        }
-    })();
-
-    /**
-     * cross-browser method to bind an event (private)
-     * @method _addEvent
-     * @param {el} node
-     * @param {ev} String
-     * @param {fn} Function
-     */
-    var _addEvent = (function () {
-        if ('addEventListner' in document.body) {
-            return function (el, ev, fn) {
-                el.addEventListener(ev, fn, false);
-            };
-        } else if ('attachEvent' in document.body) {
-            return function (el, ev, fn) {
-                el.attachEvent(ev, fn); 
-            };
-        } else {
-            return function (el, ev, fn) {
-                el['on' + ev] = fn;
-            };
-        }
-    })();
-
-    /**
      * view constructor
-     * @method View
-     * @param {config} object
-     * @returns {object}
+     * @constructor View
+     * @param {Object} config
+     * @returns {Object}
      */
     var View = function (config) {
         var v = this;
@@ -111,10 +61,9 @@
      */
     View.prototype.bindModel = function () {
         var v = this,
-            nodesCount = 0,
-            tempNode;
+            nodesCount = 0;
 
-        v.nodes = v.template.childNodes;
+        v.nodes = v.template.querySelectorAll('*');
 
         // check if template node has bindings
         v.bindNode(v.template);
@@ -122,20 +71,16 @@
         nodesCount = v.nodes.length;
 
         while (nodesCount) {
-            tempNode = v.nodes[--nodesCount];
-
-            if (_isValidNode(tempNode)) {
-                v.bindNode(tempNode);
-            }
+            v.bindNode(v.nodes[--nodesCount]);
         }
 
-        tempNode = nodesCount = null;
+        nodesCount = null;
     };
 
     /**
      * goes through all attributes present in a node and apply bindings
      * @method view.bindNode
-     * @param {node} node
+     * @param {Node} node
      */
     View.prototype.bindNode = function (node) {
         var v = this,
@@ -152,14 +97,14 @@
             type = name.replace(prefix, '').replace(suffix, '');
 
             // applied only if attr starts with `mns` and binding type is supported
-            if (prefix.test(name) && type in _bindings) {
+            if (prefix.test(name) && _bindings[type]) {
                 // wrap binding in a try to not halt rest of the binding process
                 try {
                     _bindings[type]({
                         node: node,
                         attribute: attr.name,
                         value: attr.value,
-                        valueFromModel: _toProperty(v.model, attr.value),
+                        valueFromModel: _getFromModel(v.model, attr.value),
                         controller: v.controller
                     });
                 } catch (err) {
@@ -177,8 +122,7 @@
      */
     View.prototype.update = function () {
         var v = this,
-            nodesCount = 0,
-            tempNode;
+            nodesCount = 0;
 
         // check if template node has bindings
         v.bindNode(v.template);
@@ -186,131 +130,176 @@
         nodesCount = v.nodes.length;
 
         while (nodesCount) {
-            tempNode = v.nodes[--nodesCount];
-
-            if (_isValidNode(tempNode)) {
-                v.bindNode(tempNode);
-            }
+            v.bindNode(v.nodes[--nodesCount]);
         }
 
-        tempNode = nodesCount = null;
-    };
-
-    // BINDINGS
-    _bindings.text = function (options) {
-        var node = options.node;
-
-        node.innerHTML = options.valueFromModel + '';
-    };
-
-    _bindings.attr = function (options) {
-        var node = options.node,
-            attribute = options.attribute.replace('mns-attr-', '');
-
-        node.setAttribute(attribute, options.valueFromModel + '');
-    };
-
-    _bindings.data = function (options) {
-        var node = options.node,
-            attribute = options.attribute.replace('mns-', '');
-
-        node.setAttribute(attribute, options.valueFromModel + '');
-    };
-
-    _bindings.each = function (options) {
-        var node = options.node,
-            data = options.valueFromModel,
-            tempContext = options.attribute.replace('mns-each-', ''),
-            tempData,
-            tempView,
-            tempNode,
-            bufferNode;
-
-        if (!node.__monsterTemplate__) {
-            node.__monsterTemplate__ = node.children[0].cloneNode(true);
-        }
-        bufferNode = node.__monsterTemplate__.cloneNode(true);
-        node.innerHTML = '';
-
-        for (var i in data) {
-            tempNode = bufferNode.cloneNode(true);
-
-            // set temporary data
-            tempData = data[i] || {};
-
-            // set temporary view
-            tempView = new View({
-                template: tempNode,
-                context: tempContext,
-                model: tempData
-            });
-
-            node.appendChild(tempNode);
-        }
-
-        tempData = tempNode = tempView = bufferNode = null;
-    };
-
-    _bindings.show = function (options) {
-        var node = options.node;
-
-        node.style.display = !!options.valueFromModel ? 'block' : 'none'; 
-    };
-
-    _bindings.hide = function (options) {
-        var node = options.node;
-
-        node.style.display = !!options.valueFromModel ? 'none' : 'block'; 
-    };
-
-    _bindings['class'] = function (options) {
-        var node = options.node;
-
-        if (options.valueFromModel !== '') {
-            _addClass(node, options.valueFromModel + '');
-        }
-    };
-
-    _bindings.on = function (options) {
-        var node = options.node,
-            ev = options.attribute.replace('mns-on-', ''),
-            method = options.controller[options.value];
-
-        if (typeof method === 'function') {
-            _addEvent(node, ev, method);
-        }        
+        nodesCount = null;
     };
 
     /**
      * goes through all attributes present in a node and apply bindings
      * @method _createView
-     * @param {node} node
+     * @alias monster.view
+     * @param {Node} template
+     * @param {Object} opt
      */
-    var _createView = function (template, opt) {
+    var _createView = function (template, options) {
         // return if no template is passed
-        if (!template || !_isValidNode(template)) {
-            console.error('monster.view: You must pass a valid template as a first argument');
-            return;
+        if (!template || !template.nodeType || template.nodeType !== 1) {
+            throw new Error('monster.view: You must pass a valid template as a first argument');            
         }
 
         // return if no context and model is passed
-        if(!opt.context || !opt.model) {
-            console.error('monster.view: You must specify a context and a model');
-            return;
+        if(!options || !options.context || !options.model) {
+            throw new Error('monster.view: You must specify a context and a model');            
         }
 
         // create and return a new view
         var v = new View({
             template: template,
-            context: opt.context,
-            model: opt.model,
-            controller: opt.controller
+            context: options.context,
+            model: options.model,
+            controller: options.controller
         });
 
         return v;
     };
 
+    /**
+     * creates new binding
+     * @method _setNewBinding
+     * @param {name} String
+     * @param {method} Function
+     */
+    var _createNewBinding = function (name, method) {
+        if (typeof name !== 'string') {
+            throw new Error('monster.binding: name must be a string');
+        }
+
+        if (typeof method !== 'function') {
+            throw new Error('monster.binding: you must specify a method');
+        }
+
+        if (_bindings[name]) {
+            throw new Error('monster.binding: a binding with this name already exists');
+        }
+
+        _bindings[name] = method;
+    };
+
+    /**
+     * erase existing binding
+     * @method _deleteBinding
+     * @param {name} String
+     */
+    var _deleteBinding = function (name) {
+        if (typeof name !== 'string') {
+            throw new Error('monster.clean: name must be a string');
+        }
+
+        if (_bindings[name]) {
+            _bindings[name] = null;
+        }
+    };
+
+    // REGISTER BASIC BINDINGS
+    _createNewBinding('text', function (context) {
+        var node = context.node,
+            content = context.valueFromModel;
+
+        node.innerHTML = content !== null ? content + '' : '';
+    });
+
+    _createNewBinding('attr', function (context) {
+        var node = context.node,
+            attr = context.attribute.replace('mns-attr-', ''),
+            value = context.valueFromModel;
+
+        if (value !== null) {
+            node.setAttribute(attr, value + '');
+        }
+    });
+
+    _createNewBinding('data', function (context) {
+        var node = context.node,
+            attr = context.attribute.replace('mns-', ''),
+            value = context.valueFromModel;
+
+        if (value !== null) {
+            node.setAttribute(attr, value + '');
+        }
+    });
+
+    _createNewBinding('show', function (context) {
+        context.node.style.display = context.valueFromModel ? 'block' : 'none';
+    });
+
+    _createNewBinding('hide', function (context) {
+        context.node.style.display = context.valueFromModel ? 'none' : 'block';
+    });
+
+    _createNewBinding('on', function (context) {
+        var method = context.controller[context.value],
+            ev = context.attribute.replace('mns-on-', '');
+
+        function _addEvent (el, ev, fn) {
+            if ('addEventListner' in document.body) {
+                el.addEventListener(ev, fn, false);
+            } else if ('attachEvent' in document.body) {
+                el.attachEvent(ev, fn); 
+            } else {
+                el['on' + ev] = fn;
+            }
+        }
+
+        if (typeof method === 'function') {
+            _addEvent(context.node, ev, method);   
+        }
+    });
+
+    _createNewBinding('each', function (context) {
+        var node = context.node,
+            data = context.valueFromModel,
+            tempContext = context.attribute.replace('mns-each-', ''),
+            tempData,
+            tempView,
+            tempNode,
+            bufferNode;
+
+        // creates buffer node
+        if (!node.__monsterEachTemplate__) {
+            node.__monsterEachTemplate__ = document.createElement('div');
+            node.__monsterEachTemplate__.innerHTML = node.innerHTML;
+        }
+
+        // clears content
+        node.innerHTML = '';
+
+        for (var i in data) {
+            if (data.hasOwnProperty(i)) {
+                tempNode = document.createElement('div');
+                tempNode.innerHTML = node.__monsterEachTemplate__.innerHTML;
+
+                // set temporary data
+                tempData = data[i] || {};
+
+                // set temporary view
+                tempView = new View({
+                    template: tempNode,
+                    context: tempContext,
+                    model: tempData
+                });
+
+                node.innerHTML += tempNode.innerHTML;
+            }
+        }
+
+        tempData = tempNode = tempView = bufferNode = null;
+    });
+
     return {
-        view: _createView
+        view: _createView,
+        binding: _createNewBinding,
+        clean: _deleteBinding
     };
 });

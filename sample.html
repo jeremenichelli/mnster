@@ -11,13 +11,14 @@
         <a mns-attr-href="user.blog"  mns-text="user.blog"></a>
         <h3 mns-show="user.jobs">Jobs</h3>
         <ul mns-each-job="user.jobs">
-            <li>
-                <h4 mns-text="job.where"></h4>
-                <h5 mns-text="job.as"></h5>
-            </li>
+            <h3 mns-text="job.where"></h3>
+            <p>
+                <strong>worked as </strong>
+                <span mns-text="job.as"></span>
+            </p>
         </ul>
         <button mns-show="user.free" mns-class="user.color">Hire me!</button>
-        <button mns-on-click="salute" mns-attr-data-name="user.name">Say hello!</button>
+        <button mns-on-click="salute" mns-data-name="user.name">Say hello!</button>
     </div>
     <script src="src/monster.js"></script>
     <script>

@@ -120,7 +120,7 @@ Generates content for every item in the model.
 </ul>
 ```
 
-**Note:** You may notice that there aren't a lot of bindings available. The reason is that I don't like to include code in my projects that it don't end up being used. So I prefer to keep the bindings to minimum, this means less file size and faster loading times.
+**Note:** You may notice that there aren't a lot of bindings available. The reason is that I don't like to include code in my projects that it doesn't end up being used. So I prefer to keep the bindings to minimum, this means less file size and faster loading times.
 
 *But I need other bindings!* Yes, there's a chance you might need more bindings, that's why **monster** allows you to declare bindings in a very easy way. You can *feed your monster* with as much bindings as you want.
 

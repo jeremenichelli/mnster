@@ -171,9 +171,9 @@ We use **context.attribute** value and replace the first part of it to get the a
 
 ### Size
 
-*monster.js* 8.5KB
-*monster.min.js* 2.9KB
-*gzipped monster.min.js* 1.11KB
+- **monster.js** 8.5KB
+- **monster.min.js** 2.9KB
+- **gzipped monster.min.js** 1.11KB
 
 
 ### Contribution

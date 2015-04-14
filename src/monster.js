@@ -215,7 +215,7 @@
             attr = context.attribute.replace('mns-attr-', ''),
             value = context.valueFromModel;
 
-        if (value !== null) {
+        if (attr && value !== null) {
             node.setAttribute(attr, value + '');
         }
     });
@@ -225,7 +225,7 @@
             attr = context.attribute.replace('mns-', ''),
             value = context.valueFromModel;
 
-        if (value !== null) {
+        if (attr.replace('data-', '') && value !== null) {
             node.setAttribute(attr, value + '');
         }
     });
@@ -243,7 +243,7 @@
             ev = context.attribute.replace('mns-on-', '');
 
         function _addEvent (el, ev, fn) {
-            if ('addEventListner' in document.body) {
+            if ('addEventListener' in document.body) {
                 el.addEventListener(ev, fn, false);
             } else if ('attachEvent' in document.body) {
                 el.attachEvent(ev, fn); 

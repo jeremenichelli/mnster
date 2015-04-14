@@ -10,7 +10,7 @@
         <h2 mns-text="user.job"></h2>
         <a mns-attr-href="user.blog"  mns-text="user.blog"></a>
         <h3 mns-show="user.jobs">Jobs</h3>
-        <ul mns-each-job="user.jobs">
+        <ul mns-each-job="user.jobs" mns-show="user.jobs.length">
             <h3 mns-text="job.where"></h3>
             <p>
                 <strong>worked as </strong>

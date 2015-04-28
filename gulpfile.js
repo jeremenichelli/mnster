@@ -1,51 +1,66 @@
-// modules
-var gulp = require('gulp'),
-    gutil = require('gulp-util'),
-    uglify = require('gulp-uglify'),
-    rename = require('gulp-rename'),
-    concat = require('gulp-concat-util'),
-    jshint = require('gulp-jshint'),
-    karma = require('gulp-karma'),
-    package = require('./package.json');
+(function() {
+    'use strict';
 
-// header
-var header = '// ' + package.title + ' - ' + package.author + '\n' 
-    + '// ' + package.repository.url + ' - MIT License\n\n';
+    var gulp = require('gulp'),
+        rename = require('gulp-rename'),
+        jshint = require('gulp-jshint'),
+        jscs = require('gulp-jscs'),
+        uglify = require('gulp-uglify'),
+        karma = require('gulp-karma'),
+        concat = require('gulp-concat-util'),
+        project = require('./package.json');
 
-// paths
-var paths = {
-    src: 'src/' + package.name + '.js',
-    dist: 'dist/' + package.name + '.js',
-    spec: 'test/' + package.name + '.spec.js',
-    output: 'dist/'
-}
+    // project paths
+    var paths = {
+        src: './src/' + project.name + '.js',
+        spec: './test/' + project.name + '.spec.js',
+        output: './dist'
+    }
 
-gulp.task('hint', function () {
-    return gulp.src([ paths.src, paths.spec ])
-        .pipe(jshint())
-        .pipe(jshint.reporter('jshint-stylish'))
-        .pipe(jshint.reporter('fail'));
-});
+    // banner with project info
+    var banner = '/*' +
+        '\n * ' + project.title + ' - v' + project.version +
+        '\n * ' + project.description +
+        '\n * ' + project.url +
+        '\n * ' + project.copyright + ' (c) ' + project.author + ' - ' + project.license + ' License' +
+        '\n*/\n\n';
 
-gulp.task('test', ['hint'], function () {
-    gutil.log(gutil.colors.bgGreen('JSHint passed'));
+    // tasks
+    gulp.task('hint:src', function() {
+        return gulp.src(paths.src)
+            .pipe(jscs())
+            .pipe(jshint())
+            .pipe(jshint.reporter('jshint-stylish'))
+            .pipe(jshint.reporter('fail'));
+    });
 
-    return gulp.src([paths.spec, paths.src])
-        .pipe(karma({configFile: 'test/karma.conf.js'}))
-});
+    gulp.task('hint:spec', function() {
+        return gulp.src(paths.spec)
+            .pipe(jscs())
+            .pipe(jshint())
+            .pipe(jshint.reporter('jshint-stylish'))
+            .pipe(jshint.reporter('fail'));
+    });
 
+    gulp.task('hint', [ 'hint:src', 'hint:spec' ]);
 
-gulp.task('minify', ['test'], function () {
-    gutil.log(gutil.colors.bgGreen('All tests passed'));
+    gulp.task('test', [ 'hint' ], function() {
+        return gulp.src([ paths.spec, paths.src ])
+            .pipe(karma({configFile: 'test/karma.conf.js'}));
+    });
 
-    return gulp.src(paths.src)
-        .pipe(concat.header(header))
-        .pipe(gulp.dest(paths.output))
-        .pipe(uglify())
-        .pipe(rename({
-            suffix: '.min'
-        }))
-        .pipe(gulp.dest(paths.output));
-});
+    gulp.task('build', [ 'test' ], function () {
+        return gulp.src(paths.src)
+            .pipe(concat.header(banner))
+            .pipe(gulp.dest(paths.output))
+            .pipe(uglify())
+            .pipe(rename({
+                suffix: '.min'
+            }))
+            .pipe(gulp.dest(paths.output));
+    });
 
-gulp.task('default', [ 'minify' ]);
+    // default task
+    gulp.task('default', [ 'build' ]);
+
+})();

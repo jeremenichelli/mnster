@@ -1,7 +1,11 @@
-// monster - Jeremias Menichelli
-// https://github.com/jeremenichelli/monster - MIT License
+/*
+ * monster - v1.0.1
+ * Simple and small data binding library
+ * https://github.com/jeremenichelli/monster
+ * 2015 (c) Jeremias Menichelli - MIT License
+*/
 
-(function (root, factory) {
+(function(root, factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
         define([], factory);
@@ -10,7 +14,7 @@
     } else {
         root.monster = factory(root);
     }
-})(this, function (root) {
+})(this, function(root) {
     'use strict';
 
     var _bindings = {},
@@ -26,7 +30,7 @@
      * @param {Object} model
      * @param {String} str
      */
-    var _getFromModel = function (model, str) {
+    var _getFromModel = function(model, str) {
         var props = str.split('.'),
             prop = model;
 
@@ -47,7 +51,7 @@
      * @param {Object} config
      * @returns {Object}
      */
-    var View = function (config) {
+    var View = function(config) {
         var v = this;
 
         v.template = config.template;
@@ -62,7 +66,7 @@
      * gets child nodes from template and binds each one if it's valid
      * @method view.bindModel
      */
-    View.prototype.bindModel = function () {
+    View.prototype.bindModel = function() {
         var v = this,
             nodesCount = 0;
 
@@ -85,7 +89,7 @@
      * @method view.bindNode
      * @param {Node} node
      */
-    View.prototype.bindNode = function (node) {
+    View.prototype.bindNode = function(node) {
         var v = this,
             attrs = node.attributes,
             attrsCount = attrs.length,
@@ -123,7 +127,7 @@
      * goes through all nodes and re-binds everything
      * @method view.update
      */
-    View.prototype.update = function () {
+    View.prototype.update = function() {
         var v = this,
             nodesCount = 0;
 
@@ -146,15 +150,15 @@
      * @param {Node} template
      * @param {Object} opt
      */
-    var _createView = function (template, options) {
+    var _createView = function(template, options) {
         // return if no template is passed
         if (!template || !template.nodeType || template.nodeType !== 1) {
-            throw new Error('monster.view: You must pass a valid template as a first argument');            
+            throw new Error('monster.view: You must pass a valid template as a first argument');
         }
 
         // return if no context and model is passed
-        if(!options || !options.context || !options.model) {
-            throw new Error('monster.view: You must specify a context and a model');            
+        if (!options || !options.context || !options.model) {
+            throw new Error('monster.view: You must specify a context and a model');
         }
 
         // create and return a new view
@@ -174,7 +178,7 @@
      * @param {name} String
      * @param {method} Function
      */
-    var _createNewBinding = function (name, method) {
+    var _createNewBinding = function(name, method) {
         if (typeof name !== 'string') {
             throw new Error('monster.binding: name must be a string');
         }
@@ -195,7 +199,7 @@
      * @method _deleteBinding
      * @param {name} String
      */
-    var _deleteBinding = function (name) {
+    var _deleteBinding = function(name) {
         if (typeof name !== 'string') {
             throw new Error('monster.clean: name must be a string');
         }
@@ -206,14 +210,14 @@
     };
 
     // REGISTER BASIC BINDINGS
-    _createNewBinding('text', function (context) {
+    _createNewBinding('text', function(context) {
         var node = context.node,
             content = context.valueFromModel;
 
         node.innerHTML = content !== null ? content + '' : '';
     });
 
-    _createNewBinding('attr', function (context) {
+    _createNewBinding('attr', function(context) {
         var node = context.node,
             attr = context.attribute.replace('mns-attr-', ''),
             value = context.valueFromModel;
@@ -223,7 +227,7 @@
         }
     });
 
-    _createNewBinding('data', function (context) {
+    _createNewBinding('data', function(context) {
         var node = context.node,
             attr = context.attribute.replace('mns-', ''),
             value = context.valueFromModel;
@@ -233,15 +237,15 @@
         }
     });
 
-    _createNewBinding('show', function (context) {
+    _createNewBinding('show', function(context) {
         context.node.style.display = context.valueFromModel ? 'block' : 'none';
     });
 
-    _createNewBinding('hide', function (context) {
+    _createNewBinding('hide', function(context) {
         context.node.style.display = context.valueFromModel ? 'none' : 'block';
     });
 
-    _createNewBinding('on', function (context) {
+    _createNewBinding('on', function(context) {
         var method = context.controller[context.value],
             ev = context.attribute.replace('mns-on-', '');
 
@@ -249,25 +253,24 @@
             if ('addEventListener' in document.body) {
                 el.addEventListener(ev, fn, false);
             } else if ('attachEvent' in document.body) {
-                el.attachEvent(ev, fn); 
+                el.attachEvent(ev, fn);
             } else {
                 el['on' + ev] = fn;
             }
         }
 
         if (typeof method === 'function') {
-            _addEvent(context.node, ev, method);   
+            _addEvent(context.node, ev, method);
         }
     });
 
-    _createNewBinding('each', function (context) {
+    _createNewBinding('each', function(context) {
         var node = context.node,
             data = context.valueFromModel,
             tempContext = context.attribute.replace('mns-each-', ''),
             tempData,
             tempView,
-            tempNode,
-            bufferNode;
+            tempNode;
 
         // creates buffer node
         if (!node.__monsterEachTemplate__) {
@@ -297,7 +300,7 @@
             }
         }
 
-        tempData = tempNode = tempView = bufferNode = null;
+        tempData = tempNode = tempView = null;
     });
 
     return {

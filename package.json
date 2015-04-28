@@ -2,7 +2,11 @@
   "name": "monster",
   "title": "monster",
   "description": "Simple and small data binding library",
+  "version": "1.0.1",
+  "copyright": "2015",
+  "license":  "MIT",
   "author": "Jeremias Menichelli",
+  "url": "https://github.com/jeremenichelli/monster",
   "repository": {
     "type": "git",
     "url": "https://github.com/jeremenichelli/monster"
@@ -19,6 +23,7 @@
     "gulp-karma": "0.0.4",
     "karma-jasmine": "^0.1.5",
     "karma-phantomjs-launcher": "^0.1.4",
-    "karma-spec-reporter": "0.0.13"
+    "karma-spec-reporter": "0.0.13",
+    "gulp-jscs": "^1.6.0"
   }
 }

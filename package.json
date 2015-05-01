@@ -7,6 +7,7 @@
   "license": "MIT",
   "author": "Jeremias Menichelli",
   "url": "https://github.com/jeremenichelli/mnster",
+  "main": "./dist/mnster.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/jeremenichelli/mnster"

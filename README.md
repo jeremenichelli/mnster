@@ -1,4 +1,4 @@
-#mnster [![Build Status](https://travis-ci.org/jeremenichelli/mnster.svg)](https://travis-ci.org/jeremenichelli/mnster)
+# mnster [![Build Status](https://travis-ci.org/jeremenichelli/mnster.svg)](https://travis-ci.org/jeremenichelli/mnster)
 
 A simple data binding library to cover the basic needs and with the possibility to expand its bindings in a very simple way. Keep going through this document and you'll see how.
 

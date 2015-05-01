@@ -1,21 +1,21 @@
-describe('monster', function() {
+describe('mnster', function() {
 
     describe('Global access', function() {
-        it('monster namespace available', function() {
-            expect(typeof window.monster).toBe('object');
+        it('mnster namespace available', function() {
+            expect(typeof window.mnster).toBe('object');
         });
-        it('monster.view method available', function() {
-            expect(typeof window.monster.view).toBe('function');
+        it('mnster.view method available', function() {
+            expect(typeof window.mnster.view).toBe('function');
         });
-        it('monster.binding method available', function() {
-            expect(typeof window.monster.binding).toBe('function');
+        it('mnster.binding method available', function() {
+            expect(typeof window.mnster.binding).toBe('function');
         });
-        it('monster.clean method available', function() {
-            expect(typeof window.monster.clean).toBe('function');
+        it('mnster.clean method available', function() {
+            expect(typeof window.mnster.clean).toBe('function');
         });
     });
 
-    describe('monster.view', function() {
+    describe('mnster.view', function() {
         describe('check primary functionality', function() {
             var template, model, _window;
             beforeEach(function() {
@@ -58,14 +58,14 @@ describe('monster', function() {
                 spyOn(_window, 'sampleBinding');
 
                 // sets new binding
-                monster.binding('sample', _window.sampleBinding);
+                mnster.binding('sample', _window.sampleBinding);
             });
             afterEach(function() {
-                monster.clean('sample');
+                mnster.clean('sample');
                 template = model = _window = null;
             });
             it('binds only element nodes', function() {
-                monster.view(template, {
+                mnster.view(template, {
                     context: 'obj',
                     model: model
                 });
@@ -77,7 +77,7 @@ describe('monster', function() {
 
                 template.setAttribute('mns-sample', 'obj.one');
 
-                monster.view(template, {
+                mnster.view(template, {
                     context: 'obj',
                     model: model
                 });
@@ -89,7 +89,7 @@ describe('monster', function() {
                 var newTemplate = document.createElement('div');
                 newTemplate.innerHTML = '<div><div>' + template.innerHTML + '<div></div>';
 
-                monster.view(template, {
+                mnster.view(template, {
                     context: 'obj',
                     model: model
                 });
@@ -97,7 +97,7 @@ describe('monster', function() {
                 expect(_window.sampleBinding.callCount).toBe(3);
             });
             it('binding called with correct context', function() {
-                monster.view(template, {
+                mnster.view(template, {
                     context: 'obj',
                     model: model
                 });
@@ -117,7 +117,7 @@ describe('monster', function() {
                 expect(typeof context.controller).toBe('object');
             });
             it('binding gets multilevel property from model', function() {
-                monster.view(template, {
+                mnster.view(template, {
                     context: 'obj',
                     model: model
                 });
@@ -128,7 +128,7 @@ describe('monster', function() {
                 expect(context.valueFromModel).toBe('text_3');
             });
             it('binding gets null from model', function() {
-                monster.view(template, {
+                mnster.view(template, {
                     context: 'obj',
                     model: model
                 });
@@ -140,7 +140,7 @@ describe('monster', function() {
             });
             it('binding treats undefined from model as null', function() {
                 model.three.four = {};
-                monster.view(template, {
+                mnster.view(template, {
                     context: 'obj',
                     model: model
                 });
@@ -155,7 +155,7 @@ describe('monster', function() {
                     someMethod: function() {}
                 };
 
-                monster.view(template, {
+                mnster.view(template, {
                     context: 'obj',
                     model: model,
                     controller: fakeController
@@ -167,7 +167,7 @@ describe('monster', function() {
                 expect(typeof context.controller.someMethod).toBe('function');
             });
             it('view returned with methods available', function() {
-                var sampleView = monster.view(template, {
+                var sampleView = mnster.view(template, {
                     context: 'obj',
                     model: model
                 });
@@ -189,7 +189,7 @@ describe('monster', function() {
                     node.setAttribute('mns-text', 'person.name');
                     template.appendChild(node);
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'person',
                         model: {
                             name: 'Eddie Vedder'
@@ -205,7 +205,7 @@ describe('monster', function() {
                     node.setAttribute('mns-text', 'person.followers');
                     template.appendChild(node);
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'person',
                         model: {
                             followers: 271
@@ -221,7 +221,7 @@ describe('monster', function() {
                     node.setAttribute('mns-text', 'person.available');
                     template.appendChild(node);
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'person',
                         model: {
                             available: true
@@ -237,7 +237,7 @@ describe('monster', function() {
                     node.setAttribute('mns-text', 'person.available');
                     template.appendChild(node);
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'person',
                         model: {
                             available: false
@@ -253,7 +253,7 @@ describe('monster', function() {
                     node.setAttribute('mns-text', 'person.phone');
                     template.appendChild(node);
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'person',
                         model: {
                             phone: ''
@@ -269,7 +269,7 @@ describe('monster', function() {
                     node.setAttribute('mns-text', 'person.phone');
                     template.appendChild(node);
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'person',
                         model: {
                             phone: null
@@ -285,7 +285,7 @@ describe('monster', function() {
                     node.setAttribute('mns-text', 'person.phone');
                     template.appendChild(node);
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'person',
                         model: {}
                     });
@@ -301,7 +301,7 @@ describe('monster', function() {
                     template.appendChild(node);
                     node.setAttribute('mns-attr-href', 'product.link');
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'product',
                         model: {
                             title: 'Yield',
@@ -319,7 +319,7 @@ describe('monster', function() {
                     template.appendChild(node);
                     node.setAttribute('mns-attr-product-id', 'product.index');
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'product',
                         model: {
                             title: 'Yield',
@@ -338,7 +338,7 @@ describe('monster', function() {
                     node.setAttribute('mns-attr-name-one', 'product.artist');
                     node.setAttribute('mns-attr-name-two', 'product.title');
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'product',
                         model: {
                             artist: 'Pearl Jam',
@@ -358,7 +358,7 @@ describe('monster', function() {
                     template.appendChild(node);
                     node.setAttribute('mns-attr-product-id', 'product.index');
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'product',
                         model: {
                             title: 'Yield',
@@ -377,7 +377,7 @@ describe('monster', function() {
                     node.setAttribute('mns-attr-href', 'product.link');
                     node.setAttribute('mns-text', 'product.title');
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'product',
                         model: {
                             title: 'Yield',
@@ -397,7 +397,7 @@ describe('monster', function() {
                     node.setAttribute('mns-attr-in-stock', 'product.inStock');
                     node.setAttribute('mns-attr-bonus', 'product.hasBonusTracks');
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'product',
                         model: {
                             title: 'Yield',
@@ -417,7 +417,7 @@ describe('monster', function() {
                     template.appendChild(node);
                     node.setAttribute('mns-attr-alt-href', 'product.link');
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'product',
                         model: {
                             title: 'Yield',
@@ -434,7 +434,7 @@ describe('monster', function() {
                     template.appendChild(node);
                     node.setAttribute('mns-attr-alt-href', 'product.link');
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'product',
                         model: {
                             title: 'Yield',
@@ -454,7 +454,7 @@ describe('monster', function() {
                     template.appendChild(node);
                     node.setAttribute('mns-data-title', 'product.title');
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'product',
                         model: {
                             title: 'Yield',
@@ -472,7 +472,7 @@ describe('monster', function() {
                     template.appendChild(node);
                     node.setAttribute('mns-data-product-public-id', 'product.index');
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'product',
                         model: {
                             title: 'Yield',
@@ -490,7 +490,7 @@ describe('monster', function() {
                     template.appendChild(node);
                     node.setAttribute('mns-data-product-public-id', 'product.index');
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'product',
                         model: {
                             title: 'Yield',
@@ -509,7 +509,7 @@ describe('monster', function() {
                     node.setAttribute('mns-attr-data-href', 'product.link');
                     node.setAttribute('mns-text', 'product.title');
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'product',
                         model: {
                             title: 'Yield',
@@ -529,7 +529,7 @@ describe('monster', function() {
                     node.setAttribute('mns-data-in-stock', 'product.inStock');
                     node.setAttribute('mns-data-bonus', 'product.hasBonusTracks');
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'product',
                         model: {
                             title: 'Yield',
@@ -549,7 +549,7 @@ describe('monster', function() {
                     template.appendChild(node);
                     node.setAttribute('mns-attr-data-href', 'product.link');
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'product',
                         model: {
                             title: 'Yield',
@@ -566,7 +566,7 @@ describe('monster', function() {
                     template.appendChild(node);
                     node.setAttribute('mns-attr-data-href', 'product.link');
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'product',
                         model: {
                             title: 'Yield',
@@ -592,7 +592,7 @@ describe('monster', function() {
                     template = node = null;
                 });
                 it('shows node with true boolean value', function() {
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'person',
                         model: {
                             hasChildren: true
@@ -602,7 +602,7 @@ describe('monster', function() {
                     expect(node.style.display).toBe('block');
                 });
                 it('shows node with non-zero numeric value', function() {
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'person',
                         model: {
                             hasChildren: 2
@@ -612,7 +612,7 @@ describe('monster', function() {
                     expect(node.style.display).toBe('block');
                 });
                 it('hides node with false boolean value', function() {
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'person',
                         model: {
                             hasChildren: false
@@ -622,7 +622,7 @@ describe('monster', function() {
                     expect(node.style.display).toBe('none');
                 });
                 it('hides node with zero numeric value', function() {
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'person',
                         model: {
                             hasChildren: 0
@@ -632,7 +632,7 @@ describe('monster', function() {
                     expect(node.style.display).toBe('none');
                 });
                 it('hides node with undefined value', function() {
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'person',
                         model: {}
                     });
@@ -640,7 +640,7 @@ describe('monster', function() {
                     expect(node.style.display).toBe('none');
                 });
                 it('hides node with null value', function() {
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'person',
                         model: {
                             hasChildren: null
@@ -680,7 +680,7 @@ describe('monster', function() {
                     _controller = template = node = null;
                 });
                 it('binds method without controller namespace', function() {
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'sample',
                         model: {}
                     });
@@ -690,7 +690,7 @@ describe('monster', function() {
                     expect(window.sampleMethod).toHaveBeenCalled();
                 });
                 it('binds method with controller namespace', function() {
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'sample',
                         model: {},
                         controller: _controller
@@ -701,7 +701,7 @@ describe('monster', function() {
                     expect(_controller.sampleMethod).toHaveBeenCalled();
                 });
                 it('does not bind non function objects', function() {
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'sample',
                         model: {},
                         controller: {
@@ -715,7 +715,7 @@ describe('monster', function() {
                     expect(true).toBe(true);
                 });
                 it('does not throw error if the method does not exist', function() {
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'sample',
                         model: {},
                         controller: {}
@@ -745,7 +745,7 @@ describe('monster', function() {
                     template = node = null;
                 });
                 it('binds array and generates correct number of elements', function() {
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'data',
                         model: {
                             animals: [
@@ -781,7 +781,7 @@ describe('monster', function() {
                     expect(node.children.length).toBe(5);
                 });
                 it('binds array and generates correct data', function() {
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'data',
                         model: {
                             animals: [
@@ -810,7 +810,7 @@ describe('monster', function() {
                     expect(node.children[1].children[2].style.display).toBe('none');
                 });
                 it('binds empty array and leaves no elements', function() {
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'data',
                         model: {
                             animals: []
@@ -820,7 +820,7 @@ describe('monster', function() {
                     expect(node.children.length).toBe(0);
                 });
                 it('binds object and generates correct number of elements', function() {
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'data',
                         model: {
                             animals: {
@@ -856,7 +856,7 @@ describe('monster', function() {
                     expect(node.children.length).toBe(5);
                 });
                 it('binds empty object and generates no elements', function() {
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'data',
                         model: {
                             animals: {}
@@ -870,7 +870,7 @@ describe('monster', function() {
                         '<h2 mns-text="animal.name"></h2>' +
                         '<span mns-show="animal.extinct">extinct</span>';
 
-                    monster.view(template, {
+                    mnster.view(template, {
                         context: 'data',
                         model: {
                             animals: [
@@ -917,44 +917,44 @@ describe('monster', function() {
             });
             it('when called with a non valid template', function() {
                 try {
-                    monster.view('not a template', { context: 'context', model: {} });
+                    mnster.view('not a template', { context: 'context', model: {} });
                 } catch (err) {
                     e = err;
                 }
                 expect(e instanceof Error).toBe(true);
-                expect(e.message).toBe('monster.view: You must pass a valid template as a first argument');
+                expect(e.message).toBe('mnster.view: You must pass a valid template as a first argument');
             });
             it('when called without a configuration object', function() {
                 try {
-                    monster.view(document.createElement('div'));
+                    mnster.view(document.createElement('div'));
                 } catch (err) {
                     e = err;
                 }
                 expect(e instanceof Error).toBe(true);
-                expect(e.message).toBe('monster.view: You must specify a context and a model');
+                expect(e.message).toBe('mnster.view: You must specify a context and a model');
             });
             it('when called without a context', function() {
                 try {
-                    monster.view(document.createElement('div'), { model: {} });
+                    mnster.view(document.createElement('div'), { model: {} });
                 } catch (err) {
                     e = err;
                 }
                 expect(e instanceof Error).toBe(true);
-                expect(e.message).toBe('monster.view: You must specify a context and a model');
+                expect(e.message).toBe('mnster.view: You must specify a context and a model');
             });
             it('when called without a model', function() {
                 try {
-                    monster.view(document.createElement('div'), { context: 'context' });
+                    mnster.view(document.createElement('div'), { context: 'context' });
                 } catch (err) {
                     e = err;
                 }
                 expect(e instanceof Error).toBe(true);
-                expect(e.message).toBe('monster.view: You must specify a context and a model');
+                expect(e.message).toBe('mnster.view: You must specify a context and a model');
             });
         });
     });
 
-    describe('monster.clean', function() {
+    describe('mnster.clean', function() {
         describe('delete binding', function() {
             var template,
                 node,
@@ -986,19 +986,19 @@ describe('monster', function() {
                 spyOn(_window, 'sampleBinding');
 
                 // sets new binding
-                monster.binding('sample', _window.sampleBinding);
+                mnster.binding('sample', _window.sampleBinding);
             });
             afterEach(function() {
                 template = model = context = controller = _window = null;
             });
             it('binding is no longer available', function() {
-                monster.clean('sample');
-                monster.view(template, { context: context, model: model, controller: controller });
+                mnster.clean('sample');
+                mnster.view(template, { context: context, model: model, controller: controller });
                 expect(_window.sampleBinding).not.toHaveBeenCalled();
             });
             it('deleting unxisting binding doesn\'t throw an error', function() {
-                monster.clean('sample');
-                monster.clean('sample');
+                mnster.clean('sample');
+                mnster.clean('sample');
             });
         });
         describe('errors', function() {
@@ -1011,26 +1011,26 @@ describe('monster', function() {
             });
             it('when called without name argument', function() {
                 try {
-                    monster.clean();
+                    mnster.clean();
                 } catch (err) {
                     e = err;
                 }
                 expect(e instanceof Error).toBe(true);
-                expect(e.message).toBe('monster.clean: name must be a string');
+                expect(e.message).toBe('mnster.clean: name must be a string');
             });
             it('when called with a non valid name', function() {
                 try {
-                    monster.clean(123);
+                    mnster.clean(123);
                 } catch (err) {
                     e = err;
                 }
                 expect(e instanceof Error).toBe(true);
-                expect(e.message).toBe('monster.clean: name must be a string');
+                expect(e.message).toBe('mnster.clean: name must be a string');
             });
         });
     });
 
-    describe('monster.binding', function() {
+    describe('mnster.binding', function() {
         describe('setting a new binding', function() {
             var template,
                 node,
@@ -1062,18 +1062,18 @@ describe('monster', function() {
                 spyOn(_window, 'sampleBinding');
             });
             afterEach(function() {
-                monster.clean('sample');
+                mnster.clean('sample');
                 template = model = context = controller = _window = null;
             });
             it('binding is available and called', function() {
-                monster.binding('sample', _window.sampleBinding);
-                monster.view(template, { context: context, model: model });
+                mnster.binding('sample', _window.sampleBinding);
+                mnster.view(template, { context: context, model: model });
 
                 expect(_window.sampleBinding).toHaveBeenCalled();
             });
             it('binding is called with the correct options', function() {
-                monster.binding('sample', _window.sampleBinding);
-                monster.view(template, { context: context, model: model, controller: controller });
+                mnster.binding('sample', _window.sampleBinding);
+                mnster.view(template, { context: context, model: model, controller: controller });
 
                 expect(_window.sampleBinding).toHaveBeenCalledWith({
                     node: node,
@@ -1091,44 +1091,44 @@ describe('monster', function() {
             });
             afterEach(function() {
                 e = null;
-                monster.clean('new_binding');
+                mnster.clean('new_binding');
             });
             it('when called with non valid name', function() {
                 try {
-                    monster.binding(123, function() {});
+                    mnster.binding(123, function() {});
                 } catch (err) {
                     e = err;
                 }
                 expect(e instanceof Error).toBe(true);
-                expect(e.message).toBe('monster.binding: name must be a string');
+                expect(e.message).toBe('mnster.binding: name must be a string');
             });
             it('when called without a method', function() {
                 try {
-                    monster.binding('new_binding');
+                    mnster.binding('new_binding');
                 } catch (err) {
                     e = err;
                 }
                 expect(e instanceof Error).toBe(true);
-                expect(e.message).toBe('monster.binding: you must specify a method');
+                expect(e.message).toBe('mnster.binding: you must specify a method');
             });
             it('when called with a non valid method', function() {
                 try {
-                    monster.binding('new_binding', {});
+                    mnster.binding('new_binding', {});
                 } catch (err) {
                     e = err;
                 }
                 expect(e instanceof Error).toBe(true);
-                expect(e.message).toBe('monster.binding: you must specify a method');
+                expect(e.message).toBe('mnster.binding: you must specify a method');
             });
             it('when called with an already existing binding name', function() {
-                monster.binding('new_binding', function() {});
+                mnster.binding('new_binding', function() {});
                 try {
-                    monster.binding('new_binding', function() {});
+                    mnster.binding('new_binding', function() {});
                 } catch (err) {
                     e = err;
                 }
                 expect(e instanceof Error).toBe(true);
-                expect(e.message).toBe('monster.binding: a binding with this name already exists');
+                expect(e.message).toBe('mnster.binding: a binding with this name already exists');
             });
         });
     });

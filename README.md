@@ -1,16 +1,16 @@
-#monster [![Build Status](https://travis-ci.org/jeremenichelli/monster.svg)](https://travis-ci.org/jeremenichelli/monster)
+#mnster [![Build Status](https://travis-ci.org/jeremenichelli/mnster.svg)](https://travis-ci.org/jeremenichelli/mnster)
 
 A simple data binding library to cover the basic needs and with the possibility to expand its bindings in a very simple way. Keep going through this document and you'll see how.
 
-### monster.view
+### mnster.view
 
-As most of the libraries of its kind, **monster** will let you fill the content of an HTML template by calling the *view* function, you only need to pass a template (node), a context (string) and the model of the view (object).
+As most of the libraries of its kind, **mnster** will let you fill the content of an HTML template by calling the *view* function, you only need to pass a template (node), a context (string) and the model of the view (object).
 
 ```js
 var template = document.createElement('p');
 template.setAttribute('mns-text', 'me.name');
 
-monster.view(template, { context: 'me', model: { name: 'John Oliver' } });
+mnster.view(template, { context: 'me', model: { name: 'John Oliver' } });
 ```
 
 Yes! It's that simple.
@@ -24,7 +24,7 @@ var template = document.createElement('p');
 template.innerHTML = '<span mns-text="me.name.first"></span> ' +
     '<span mns-text="me.name.last"></span>';
 
-monster.view(
+mnster.view(
     template, {
         context: 'me',
         model: {
@@ -41,8 +41,8 @@ You can create the template and later append it to the body of the document or g
 
 ### bindings
 
-Here are the things you can do with **monster** with just adding it to your project.
-*If the property you declared in the binding attribute is not found *monster* won't add nothing to the node.*
+Here are the things you can do with **mnster** with just adding it to your project.
+*If the property you declared in the binding attribute is not found *mnster* won't add nothing to the node.*
 
 #### mns-text
 
@@ -86,7 +86,7 @@ Hides the element if the value form the model is true.
 
 #### mns-on-[EVENT]
 
-Sets an event in the element. It can be global or inside a controller. When you declare a view you are able to add a controller as a configuration, if you don't specify that then **monster** will asume the method is global.
+Sets an event in the element. It can be global or inside a controller. When you declare a view you are able to add a controller as a configuration, if you don't specify that then **mnster** will asume the method is global.
 
 ```js
 ctrl = {
@@ -95,7 +95,7 @@ ctrl = {
     }
 };
 
-monster.view(
+mnster.view(
     template, {
         context: 'me',
         model: {},
@@ -122,12 +122,12 @@ Generates content for every item in the model.
 
 **Note:** You may notice that there aren't a lot of bindings available. The reason is that I don't like to include code in my projects that it doesn't end up being used. So I prefer to keep the bindings to minimum, this means less file size and faster loading times.
 
-*But I need other bindings!* Yes, there's a chance you might need more bindings, that's why **monster** allows you to declare bindings in a very easy way. You can *feed your monster* with as much bindings as you want.
+*But I need other bindings!* Yes, there's a chance you might need more bindings, that's why **mnster** allows you to declare bindings in a very easy way. You can *feed your mnster* with as much bindings as you want.
 
 
 ### Declaring new bindings
 
-If you need to extend the funcitonality of this library, you can use the ```monster.binding``` method. First of all, remember that any binding attribute must start with *mns-* followed by the binding name itself and after that you can add as much letters and hyphens as you want. You'll also need a function that does the trick, for that **monster** will give you a context object with all the values you need to apply your binding. 
+If you need to extend the funcitonality of this library, you can use the ```mnster.binding``` method. First of all, remember that any binding attribute must start with *mns-* followed by the binding name itself and after that you can add as much letters and hyphens as you want. You'll also need a function that does the trick, for that **mnster** will give you a context object with all the values you need to apply your binding. 
 
 Every context object will contain this properties:
 - **context.node** element that holds the binding attribute
@@ -142,7 +142,7 @@ Let's see our first example, here the context object that the **mns-text** recei
 var template = document.createElement('p');
 template.setAttribute('mns-text', 'me.name');
 
-monster.view(template, { context: 'me', model: { name: 'John Oliver' } });
+mnster.view(template, { context: 'me', model: { name: 'John Oliver' } });
 ```
 
 - **context.node** template (node)
@@ -154,7 +154,7 @@ monster.view(template, { context: 'me', model: { name: 'John Oliver' } });
 You can check the source code and see how the *mns-attr* works.
 
 ```js
-monster.binding('attr', function (context) {
+mnster.binding('attr', function (context) {
     var node = context.node,
         attr = context.attribute.replace('mns-attr-', ''),
         value = context.valueFromModel;
@@ -171,17 +171,17 @@ We use **context.attribute** value and replace the first part of it to get the a
 
 ### Size
 
-- **monster.js** 8.5KB
-- **monster.min.js** 2.9KB
-- **gzipped monster.min.js** 1.11KB
+- **mnster.js** 8.5KB
+- **mnster.min.js** 2.9KB
+- **gzipped mnster.min.js** 1.11KB
 
 
 ### Contribution
 
-This is the first version of this library. Feel free to use it, explore it, propose changes and bindings or rise issues <a href="https://github.com/jeremenichelli/monster/issues" target="_blank">here</a>. It's open for everyone.
+This is the first version of this library. Feel free to use it, explore it, propose changes and bindings or rise issues <a href="https://github.com/jeremenichelli/mnster/issues" target="_blank">here</a>. It's open for everyone.
 
 
-*feed your monster and happy coding!*
+*feed your mnster and happy coding!*
 
 
 

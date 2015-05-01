@@ -1,15 +1,15 @@
 {
-  "name": "monster",
-  "title": "monster",
+  "name": "mnster",
+  "title": "mnster",
   "description": "Simple and small data binding library",
   "version": "1.0.1",
   "copyright": "2015",
-  "license":  "MIT",
+  "license": "MIT",
   "author": "Jeremias Menichelli",
-  "url": "https://github.com/jeremenichelli/monster",
+  "url": "https://github.com/jeremenichelli/mnster",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jeremenichelli/monster"
+    "url": "https://github.com/jeremenichelli/mnster"
   },
   "devDependencies": {
     "gulp": "^3.8.9",
@@ -24,6 +24,7 @@
     "karma-jasmine": "^0.1.5",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-spec-reporter": "0.0.13",
-    "gulp-jscs": "^1.6.0"
+    "gulp-jscs": "^1.6.0",
+    "del": "^1.1.1"
   }
 }

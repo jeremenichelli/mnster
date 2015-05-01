@@ -1,7 +1,10 @@
-# Node
+// dev dependencies
 node_modules
 
-## OS X
+// npm
+npm_debug.log
+
+// OS X
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -10,7 +13,7 @@ Icon
 .Spotlight-V100
 .Trashes
 
-## Windows
+// windows
 Thumbs.db
 ehthumbs.db
 Desktop.ini

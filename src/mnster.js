@@ -1,10 +1,3 @@
-/*
- * monster - v1.0.1
- * Simple and small data binding library
- * https://github.com/jeremenichelli/monster
- * 2015 (c) Jeremias Menichelli - MIT License
-*/
-
 (function(root, factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
@@ -12,7 +5,7 @@
     } else if (typeof exports === 'object') {
         module.exports = factory;
     } else {
-        root.monster = factory(root);
+        root.mnster = factory(root);
     }
 })(this, function(root) {
     'use strict';
@@ -146,19 +139,19 @@
     /**
      * goes through all attributes present in a node and apply bindings
      * @method _createView
-     * @alias monster.view
+     * @alias mnster.view
      * @param {Node} template
      * @param {Object} opt
      */
     var _createView = function(template, options) {
         // return if no template is passed
         if (!template || !template.nodeType || template.nodeType !== 1) {
-            throw new Error('monster.view: You must pass a valid template as a first argument');
+            throw new Error('mnster.view: You must pass a valid template as a first argument');
         }
 
         // return if no context and model is passed
         if (!options || !options.context || !options.model) {
-            throw new Error('monster.view: You must specify a context and a model');
+            throw new Error('mnster.view: You must specify a context and a model');
         }
 
         // create and return a new view
@@ -180,15 +173,15 @@
      */
     var _createNewBinding = function(name, method) {
         if (typeof name !== 'string') {
-            throw new Error('monster.binding: name must be a string');
+            throw new Error('mnster.binding: name must be a string');
         }
 
         if (typeof method !== 'function') {
-            throw new Error('monster.binding: you must specify a method');
+            throw new Error('mnster.binding: you must specify a method');
         }
 
         if (_bindings[name]) {
-            throw new Error('monster.binding: a binding with this name already exists');
+            throw new Error('mnster.binding: a binding with this name already exists');
         }
 
         _bindings[name] = method;
@@ -201,7 +194,7 @@
      */
     var _deleteBinding = function(name) {
         if (typeof name !== 'string') {
-            throw new Error('monster.clean: name must be a string');
+            throw new Error('mnster.clean: name must be a string');
         }
 
         if (_bindings[name]) {
@@ -273,9 +266,9 @@
             tempNode;
 
         // creates buffer node
-        if (!node.__monsterEachTemplate__) {
-            node.__monsterEachTemplate__ = document.createElement('div');
-            node.__monsterEachTemplate__.innerHTML = node.innerHTML;
+        if (!node.__mnsterEachTemplate__) {
+            node.__mnsterEachTemplate__ = document.createElement('div');
+            node.__mnsterEachTemplate__.innerHTML = node.innerHTML;
         }
 
         // clears content
@@ -284,7 +277,7 @@
         for (var i in data) {
             if (data.hasOwnProperty(i)) {
                 tempNode = document.createElement('div');
-                tempNode.innerHTML = node.__monsterEachTemplate__.innerHTML;
+                tempNode.innerHTML = node.__mnsterEachTemplate__.innerHTML;
 
                 // set temporary data
                 tempData = data[i] || {};

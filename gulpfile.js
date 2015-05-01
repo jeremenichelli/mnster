@@ -8,6 +8,7 @@
         uglify = require('gulp-uglify'),
         karma = require('gulp-karma'),
         concat = require('gulp-concat-util'),
+        del = require('del'),
         project = require('./package.json');
 
     // project paths
@@ -50,6 +51,9 @@
     });
 
     gulp.task('build', [ 'test' ], function () {
+        // clean dist content first
+        del(paths.output);
+
         return gulp.src(paths.src)
             .pipe(concat.header(banner))
             .pipe(gulp.dest(paths.output))

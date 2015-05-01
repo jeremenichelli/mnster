@@ -24,7 +24,7 @@
         "document": true,
         "expect": true,
         "describe": true,
-        "monster": true,
+        "mnster": true,
         "it": true,
         "beforeEach": true,
         "afterEach": true,

@@ -11,6 +11,7 @@
     'use strict';
 
     var _bindings = {},
+        prefixName = 'mns',
         prefix = /^(mns-)/,
         suffix = /(\-[a-zA-Z0-9]+)+/;
 
@@ -202,6 +203,20 @@
         }
     };
 
+    /**
+     * change binding prefix
+     * @method _setPrefix
+     * @param {prfx} String
+     */
+    var _setPrefix = function(prfx) {
+        if (typeof prfx !== 'string' || prfx === '') {
+            throw new Error('mnster.prefix: prefix must be a populated string');
+        }
+
+        prefixName = prfx;
+        prefix = new RegExp('^(' + prfx + ')-');
+    };
+
     // REGISTER BASIC BINDINGS
     _createNewBinding('text', function(context) {
         var node = context.node,
@@ -212,7 +227,7 @@
 
     _createNewBinding('attr', function(context) {
         var node = context.node,
-            attr = context.attribute.replace('mns-attr-', ''),
+            attr = context.attribute.replace(prefixName + '-attr-', ''),
             value = context.valueFromModel;
 
         if (attr && value !== null) {
@@ -222,7 +237,7 @@
 
     _createNewBinding('data', function(context) {
         var node = context.node,
-            attr = context.attribute.replace('mns-', ''),
+            attr = context.attribute.replace(prefixName + '-', ''),
             value = context.valueFromModel;
 
         if (attr.replace('data-', '') && value !== null) {
@@ -240,7 +255,7 @@
 
     _createNewBinding('on', function(context) {
         var method = context.controller[context.value],
-            ev = context.attribute.replace('mns-on-', '');
+            ev = context.attribute.replace(prefixName + '-on-', '');
 
         function _addEvent (el, ev, fn) {
             if ('addEventListener' in document.body) {
@@ -260,7 +275,7 @@
     _createNewBinding('each', function(context) {
         var node = context.node,
             data = context.valueFromModel,
-            tempContext = context.attribute.replace('mns-each-', ''),
+            tempContext = context.attribute.replace(prefixName + '-each-', ''),
             tempData,
             tempView,
             tempNode;
@@ -299,6 +314,7 @@
     return {
         view: _createView,
         binding: _createNewBinding,
-        clean: _deleteBinding
+        clean: _deleteBinding,
+        prefix: _setPrefix
     };
 });

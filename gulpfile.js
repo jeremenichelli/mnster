@@ -50,12 +50,10 @@
             .pipe(karma({configFile: 'test/karma.conf.js'}));
     });
 
-    gulp.task('clean', function() {
+    gulp.task('build', [ 'test' ], function () {
         // clean dist content first
         del(paths.output + '/*');
-    });
 
-    gulp.task('build', [ 'test' ], function () {
         return gulp.src(paths.src)
             .pipe(concat.header(banner))
             .pipe(gulp.dest(paths.output))

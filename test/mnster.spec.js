@@ -996,7 +996,7 @@ describe('mnster', function() {
                 mnster.view(template, { context: context, model: model, controller: controller });
                 expect(_window.sampleBinding).not.toHaveBeenCalled();
             });
-            it('deleting unxisting binding doesn\'t throw an error', function() {
+            it('deleting unexisting binding doesn\'t throw an error', function() {
                 mnster.clean('sample');
                 mnster.clean('sample');
             });
@@ -1129,6 +1129,90 @@ describe('mnster', function() {
                 }
                 expect(e instanceof Error).toBe(true);
                 expect(e.message).toBe('mnster.binding: a binding with this name already exists');
+            });
+        });
+    });
+
+    describe('mnster.prefix', function() {
+        describe('change binding', function() {
+            afterEach(function() {
+                mnster.prefix('mns');
+            });
+            it('changing prefix doesn\'t throw an error', function() {
+                mnster.prefix('some');
+                expect(true).toBe(true);
+            });
+            it('change binding prefix to data and use it', function() {
+                var temp = document.createElement('p');
+
+                temp.setAttribute('data-text', 'me.name');
+
+                mnster.prefix('data');
+                mnster.view(temp, {
+                    model: {
+                        name: 'John'
+                    },
+                    context: 'me'
+                });
+
+                expect(temp.innerHTML).toBe('John');
+            });
+            it('change binding prefix to any word and use it', function() {
+                var temp = document.createElement('p');
+
+                temp.setAttribute('something-text', 'me.name');
+
+                mnster.prefix('something');
+                mnster.view(temp, {
+                    model: {
+                        name: 'John'
+                    },
+                    context: 'me'
+                });
+
+                expect(temp.innerHTML).toBe('John');
+            });
+            it('original prefix doesn\'t work after changing binding prefix', function() {
+                var temp = document.createElement('p');
+
+                temp.setAttribute('mns-text', 'me.name');
+
+                mnster.prefix('something');
+                mnster.view(temp, {
+                    model: {
+                        name: 'John'
+                    },
+                    context: 'me'
+                });
+
+                expect(temp.innerHTML).not.toBe('John');
+                expect(temp.innerHTML).toBe('');
+            });
+        });
+        describe('errors', function() {
+            it('empty string throws an error', function() {
+                var e = 'not an error';
+
+                try {
+                    mnster.prefix('');
+                } catch (err) {
+                    e = err;
+                }
+
+                expect(e instanceof Error).toBe(true);
+                expect(e.message).toBe('mnster.prefix: prefix must be a populated string');
+            });
+            it('not string argument throws an error', function() {
+                var e = 'not an error';
+
+                try {
+                    mnster.prefix(351);
+                } catch (err) {
+                    e = err;
+                }
+
+                expect(e instanceof Error).toBe(true);
+                expect(e.message).toBe('mnster.prefix: prefix must be a populated string');
             });
         });
     });

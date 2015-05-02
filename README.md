@@ -81,7 +81,7 @@ Shows the element if the value form the model is true.
 Hides the element if the value form the model is true.
 
 ```html
-<button mns-show="user.hasAJob">You can hire me!</button>
+<button mns-hide="user.hasAJob">You can hire me!</button>
 ```
 
 #### mns-on-[EVENT]
@@ -120,7 +120,7 @@ Generates content for every item in the model.
 </ul>
 ```
 
-**Note:** You may notice that there aren't a lot of bindings available. The reason is that I don't like to include code in my projects that it doesn't end up being used. So I prefer to keep the bindings to minimum, this means less file size and faster loading times.
+**Note:** You may notice that there aren't a lot of bindings available. The reason is that I usually don't like to include code in my projects that doesn't end up being used. So I prefer to keep the bindings to minimum, this means less file size and faster loading times.
 
 *But I need other bindings!* Yes, there's a chance you might need more bindings, that's why **mnster** allows you to declare bindings in a very easy way. You can *feed your mnster* with as much bindings as you want.
 
@@ -169,11 +169,21 @@ We use **context.attribute** value and replace the first part of it to get the a
 
 *You can add as many bindings as you want.*
 
+
+### Change binding prefix
+
+If you don't like ```mns-``` as the prefix you can change it calling ```mnster.prefix``` and passing a valid string.
+
+```js
+mnster.prefix('data');
+```
+
+
 ### Size
 
-- **mnster.js** 8.5KB
-- **mnster.min.js** 2.9KB
-- **gzipped mnster.min.js** 1.11KB
+- **mnster.js** 8.95KB
+- **mnster.min.js** 2.35KB
+- **gzipped mnster.min.js** 1.16KB
 
 
 ### Contribution

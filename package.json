@@ -10,7 +10,7 @@
   "main": "./dist/mnster.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jeremenichelli/mnster"
+    "url": "git+https://github.com/jeremenichelli/mnster.git"
   },
   "devDependencies": {
     "gulp": "^3.8.9",
@@ -27,5 +27,36 @@
     "karma-spec-reporter": "0.0.13",
     "gulp-jscs": "^1.6.0",
     "del": "^1.1.1"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/jeremenichelli/mnster/issues"
+  },
+  "homepage": "https://github.com/jeremenichelli/mnster#readme",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "gulp-jscs": "^1.6.0",
+    "gulp-concat-util": "^0.5.2",
+    "del": "^1.1.1",
+    "gulp": "^3.8.11",
+    "gulp-karma": "^0.0.4",
+    "gulp-util": "^3.0.4",
+    "gulp-uglify": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-jshint": "^1.10.0",
+    "jscs-stylish": "^0.3.1",
+    "jshint-stylish": "^1.0.1",
+    "karma": "^0.12.32",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-spec-reporter": "^0.0.13",
+    "karma-jasmine": "^0.1.5"
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "keywords": [
+    "data",
+    "binding"
+  ]
 }

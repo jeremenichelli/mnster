@@ -2,6 +2,24 @@
 
 A simple data binding library to cover the basic needs and with the possibility to expand its bindings in a very simple way. Keep going through this document and you'll see how.
 
+## Install
+
+If you want to use ```mnster```in your project you can just add a script tag to it.
+
+```
+<script src="assets/scripts/mnster.js"></script>
+```
+
+It's also available in *npm* and *bower* if you are using any of these package managers.
+
+```
+npm install mnster --save-dev
+```
+
+```
+bower install mnster --save-dev
+```
+
 ### mnster.view
 
 As most of the libraries of its kind, **mnster** will let you fill the content of an HTML template by calling the *view* function, you only need to pass a template (node), a context (string) and the model of the view (object).

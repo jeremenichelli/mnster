@@ -13,11 +13,11 @@ If you want to use ```mnster```in your project you can just add a script tag to 
 It's also available in *npm* and *bower* if you are using any of these package managers.
 
 ```
-npm install mnster --save-dev
+npm install mnster --save
 ```
 
 ```
-bower install mnster --save-dev
+bower install mnster --save
 ```
 
 ### mnster.view
@@ -65,6 +65,14 @@ Here are the things you can do with **mnster** with just adding it to your proje
 #### mns-text
 
 Sets the text content of an element.
+
+```html
+<p mns-text="user.name"></p>
+```
+
+#### mns-html
+
+Inserts HTML content to an element.
 
 ```html
 <p mns-text="user.name"></p>

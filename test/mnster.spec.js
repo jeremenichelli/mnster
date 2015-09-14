@@ -278,6 +278,22 @@ describe('mnster', function() {
 
                     expect(node.innerHTML).toBe('');
                 });
+                it('html like text doesn\'t generate child nodes', function() {
+                    var template = document.createElement('div'),
+                        node = document.createElement('p');
+
+                    node.setAttribute('mns-text', 'person.phone');
+                    template.appendChild(node);
+
+                    mnster.view(template, {
+                        context: 'person',
+                        model: {
+                            phone: '<span>+54 092 45620987</span>'
+                        }
+                    });
+
+                    expect(node.children.length).toEqual(0);
+                });
                 it('undefined value binds empty string', function() {
                     var template = document.createElement('div'),
                         node = document.createElement('p');
@@ -291,6 +307,40 @@ describe('mnster', function() {
                     });
 
                     expect(node.innerHTML).toBe('');
+                });
+            });
+            describe('mns-html', function() {
+                it('simple text value', function() {
+                    var template = document.createElement('div'),
+                        node = document.createElement('p');
+
+                    node.setAttribute('mns-html', 'person.name');
+                    template.appendChild(node);
+
+                    mnster.view(template, {
+                        context: 'person',
+                        model: {
+                            name: 'Eddie Vedder'
+                        }
+                    });
+
+                    expect(node.innerHTML).toBe('Eddie Vedder');
+                });
+                it('html string content generates child nodes', function() {
+                    var template = document.createElement('div'),
+                        node = document.createElement('p');
+
+                    node.setAttribute('mns-html', 'person.phone');
+                    template.appendChild(node);
+
+                    mnster.view(template, {
+                        context: 'person',
+                        model: {
+                            phone: '<span>+54 092 45620987</span>'
+                        }
+                    });
+
+                    expect(node.children.length).toEqual(1);
                 });
             });
             describe('mns-attr', function() {
@@ -817,7 +867,7 @@ describe('mnster', function() {
                         }
                     });
 
-                    expect(node.children.length).toBe(0);
+                    expect(node.innerHTML).toBe('');
                 });
                 it('binds object and generates correct number of elements', function() {
                     mnster.view(template, {
@@ -953,7 +1003,6 @@ describe('mnster', function() {
             });
         });
     });
-
     describe('mnster.clean', function() {
         describe('delete binding', function() {
             var template,
@@ -1029,7 +1078,6 @@ describe('mnster', function() {
             });
         });
     });
-
     describe('mnster.binding', function() {
         describe('setting a new binding', function() {
             var template,
@@ -1132,7 +1180,6 @@ describe('mnster', function() {
             });
         });
     });
-
     describe('mnster.prefix', function() {
         describe('change binding', function() {
             afterEach(function() {

@@ -47,6 +47,21 @@
     };
 
     /**
+     * cleans node content (faster than innerHTML)
+     * @method _empty
+     * @param {Node} el
+     */
+    var _empty = function(el) {
+        while (el.firstChild) {
+            el.removeChild(el.firstChild);
+        }
+
+        if (el.innerText) {
+            el.innerText = '';
+        }
+    };
+
+    /**
      * view constructor
      * @constructor View
      * @param {Object} config
@@ -116,7 +131,7 @@
                         controller: v.controller
                     });
                 } catch (err) {
-                    console.error(err);
+                    console.log('mnster binding error: ' + err);
                 }
             }
         }
@@ -227,6 +242,14 @@
     // REGISTER BASIC BINDINGS
     _createNewBinding('text', function(context) {
         var node = context.node,
+            content = context.valueFromModel,
+            prop = node.innerText ? 'innerText' : 'textContent';
+
+        node[prop] = content !== null ? content + '' : '';
+    });
+
+    _createNewBinding('html', function(context) {
+        var node = context.node,
             content = context.valueFromModel;
 
         node.innerHTML = content !== null ? content + '' : '';
@@ -294,7 +317,7 @@
         }
 
         // clears content
-        node.innerHTML = '';
+        _empty(node);
 
         for (var i in data) {
             if (data.hasOwnProperty(i)) {

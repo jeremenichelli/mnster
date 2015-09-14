@@ -1,5 +1,5 @@
 /*
- * mnster - v1.1.2
+ * mnster - v1.2.0
  * Simple and small data binding library
  * https://github.com/jeremenichelli/mnster
  * 2015 (c) Jeremias Menichelli - MIT License

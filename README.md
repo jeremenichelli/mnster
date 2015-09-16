@@ -67,7 +67,7 @@ Here are the things you can do with **mnster** with just adding it to your proje
 Sets the text content of an element.
 
 ```html
-<p mns-text="user.name"></p>
+<p mns-text="person.name"></p>
 ```
 
 #### mns-html
@@ -75,7 +75,7 @@ Sets the text content of an element.
 Inserts HTML content to an element.
 
 ```html
-<p mns-text="user.name"></p>
+<article mns-html="post.excerpt"></article>
 ```
 
 #### mns-attr-[ATTRIBUTE_NAME]
@@ -91,7 +91,7 @@ Adds an atribute and its value to the element.
 Adds a data atribute and its value to the element.
 
 ```html
-<img mns-data-src="user.avatar" alt="">
+<img mns-data-lazyload="post.image.isLarge" mns-data-src="post.image.src">
 ```
 
 #### mns-show
@@ -99,7 +99,7 @@ Adds a data atribute and its value to the element.
 Shows the element if the value form the model is true.
 
 ```html
-<button mns-show="user.isFree">You can hire me!</button>
+<button mns-show="profile.available">Hire me!</button>
 ```
 
 #### mns-hide
@@ -107,7 +107,7 @@ Shows the element if the value form the model is true.
 Hides the element if the value form the model is true.
 
 ```html
-<button mns-hide="user.hasAJob">You can hire me!</button>
+<button mns-hide="user.currentJob">Hire me!</button>
 ```
 
 #### mns-on-[EVENT]

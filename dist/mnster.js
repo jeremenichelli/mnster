@@ -1,6 +1,5 @@
 /*
  * mnster - v1.2.1
- * Simple and small data binding library
  * https://github.com/jeremenichelli/mnster
  * 2015 (c) Jeremias Menichelli - MIT License
 */
@@ -22,14 +21,12 @@
         prefix = /^(mns-)/,
         suffix = /(\-[a-zA-Z0-9]+)+/;
 
-    // PRIVATE METHODS
-
     /**
-     * given a list of properties concatenated by dots and an object
-     * returns the resulting data or an empty string
+     * gets property given a dotted path or return null
      * @method _getFromModel
      * @param {Object} model
      * @param {String} str
+     * @returns {null|*} prop
      */
     var _getFromModel = function(model, str) {
         var props = str.split('.'),
@@ -50,6 +47,7 @@
      * cleans node content (faster than innerHTML)
      * @method _empty
      * @param {Node} el
+     * @returns {undefined}
      */
     var _empty = function(el) {
         while (el.firstChild) {
@@ -80,7 +78,8 @@
 
     /**
      * gets child nodes from template and binds each one if it's valid
-     * @method view.bindModel
+     * @method View.bindModel
+     * @returns {undefined}
      */
     View.prototype.bindModel = function() {
         var v = this,
@@ -102,8 +101,9 @@
 
     /**
      * goes through all attributes present in a node and apply bindings
-     * @method view.bindNode
+     * @method View.bindNode
      * @param {Node} node
+     * @returns {undefined}
      */
     View.prototype.bindNode = function(node) {
         var v = this,
@@ -141,7 +141,8 @@
 
     /**
      * goes through all nodes and re-binds everything
-     * @method view.update
+     * @method View.update
+     * @returns {undefined}
      */
     View.prototype.update = function() {
         var v = this,
@@ -164,7 +165,8 @@
      * @method _createView
      * @alias mnster.view
      * @param {Node} template
-     * @param {Object} opt
+     * @param {Object} options
+     * @returns {Object} view
      */
     var _createView = function(template, options) {
         // return if no template is passed
@@ -178,21 +180,22 @@
         }
 
         // create and return a new view
-        var v = new View({
+        var view = new View({
             template: template,
             context: options.context,
             model: options.model,
             controller: options.controller
         });
 
-        return v;
+        return view;
     };
 
     /**
      * creates new binding
      * @method _setNewBinding
-     * @param {name} String
-     * @param {method} Function
+     * @param {String} name
+     * @param {Function} method
+     * @returns {undefined}
      */
     var _createNewBinding = function(name, method) {
         if (typeof name !== 'string') {
@@ -213,7 +216,8 @@
     /**
      * erase existing binding
      * @method _deleteBinding
-     * @param {name} String
+     * @param {String} name
+     * @returns {undefined}
      */
     var _deleteBinding = function(name) {
         if (typeof name !== 'string') {
@@ -228,7 +232,8 @@
     /**
      * change binding prefix
      * @method _setPrefix
-     * @param {prfx} String
+     * @param {String} prfx
+     * @returns {undefined}
      */
     var _setPrefix = function(prfx) {
         if (typeof prfx !== 'string' || prfx === '') {
@@ -287,7 +292,7 @@
         var method = context.controller[context.value],
             ev = context.attribute.replace(prefixName + '-on-', '');
 
-        function _addEvent (el, ev, fn) {
+        function _addEvent (el, ev, fn) { // eslint-disable-line func-style
             if ('addEventListener' in document.body) {
                 el.addEventListener(ev, fn, false);
             } else if ('attachEvent' in document.body) {
@@ -306,8 +311,8 @@
         var node = context.node,
             data = context.valueFromModel,
             tempContext = context.attribute.replace(prefixName + '-each-', ''),
+            tempView, // eslint-disable-line no-unused-vars
             tempData,
-            tempView,
             tempNode;
 
         // creates buffer node
@@ -338,7 +343,7 @@
             }
         }
 
-        tempData = tempNode = tempView = null;
+        tempView = tempData = tempNode = null;
     });
 
     return {

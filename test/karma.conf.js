@@ -1,14 +1,9 @@
-module.exports = function (config) {
-  config.set({
-    basePath : '',
-    autoWatch : true,
-    frameworks: ['jasmine'],
-    browsers : ['PhantomJS'],
-    plugins : [
-      'karma-spec-reporter',
-      'karma-phantomjs-launcher',
-      'karma-jasmine'
-    ],
-    reporters : ['spec']
-  });
+// karma.conf.js
+module.exports = function(config) {
+    config.set({
+        files: [ '../src/mnster.js', '../test/mnster.spec.js' ],
+        browsers: [ 'PhantomJS' ],
+        frameworks: [ 'jasmine' ],
+        reporters: [ 'spec' ]
+    });
 };

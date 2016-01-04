@@ -102,7 +102,7 @@
     View.prototype.bindNode = function(node) {
         var v = this,
             attrs = node.attributes,
-            attrsCount = attrs.length,
+            attrsCount = attrs && attrs.length ? attrs.length : 0,
             // while block variables
             attr,
             name,
@@ -164,7 +164,7 @@
      */
     var _createView = function(template, options) {
         // return if no template is passed
-        if (!template || !template.nodeType || template.nodeType !== 1) {
+        if (!template || !template.nodeType) {
             throw new Error('mnster.view: You must pass a valid template as a first argument');
         }
 
@@ -286,18 +286,8 @@
         var method = context.controller[context.value],
             ev = context.attribute.replace(prefixName + '-on-', '');
 
-        function _addEvent (el, ev, fn) { // eslint-disable-line func-style
-            if ('addEventListener' in document.body) {
-                el.addEventListener(ev, fn, false);
-            } else if ('attachEvent' in document.body) {
-                el.attachEvent(ev, fn);
-            } else {
-                el['on' + ev] = fn;
-            }
-        }
-
         if (typeof method === 'function') {
-            _addEvent(context.node, ev, method);
+            context.node.addEventListener(ev, method, false);
         }
     });
 

@@ -207,10 +207,14 @@ mnster.prefix('data');
 
 ### Size
 
-- **mnster.js** 8.95KB
-- **mnster.min.js** 2.35KB
-- **gzipped mnster.min.js** 1.16KB
+- **mnster.js** 9.26KB
+- **mnster.min.js** 3.12KB
+- **gzipped mnster.min.js** 1.21KB
 
+#### v1.3.0
+
+- Event binding only works on browsers with `addEventListener` support.
+- `mnster.view` supports content from a template tag as first argument.
 
 ### Contribution
 

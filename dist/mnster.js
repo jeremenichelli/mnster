@@ -1,5 +1,5 @@
 /*
- * mnster - v1.2.2
+ * mnster - v1.3.0
  * https://github.com/jeremenichelli/mnster
  * 2015 (c) Jeremias Menichelli - MIT License
 */
